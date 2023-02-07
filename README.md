@@ -2,6 +2,10 @@
 ServerForge's OSS SirenBot. Monitor dangerous changes in your communities and be alerted as soon as they happen.
 
 ## To Do: 
+After an item is completed list, ~~strikethrough~~ it.
+Example:
+* ~~Testing~~
+
 ### Events
 * New users added to watched roles
 * Users in watched roles kicked/banned
@@ -32,10 +36,6 @@ ServerForge's OSS SirenBot. Monitor dangerous changes in your communities and be
 ### Additional
 * Help menu
 * Fix the issue where the `help` command falls under 'No Category' in the help menu. I (Pattles) have just added a janky fix for the time being, visible in SirenBot.py
-
-## Completed
-After an item is completed from the [To Do](https://github.com/ping-Toven/SF-SirenBot/blob/main/README.md#to-do) list, *italicize* it, then add it below.
-* Test item - Pattles
 
 ## Additional Information
 ### Permissions Required
