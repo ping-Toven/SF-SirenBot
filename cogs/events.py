@@ -39,6 +39,7 @@ class Events(commands.Cog):
 
 
         # Toven, send this to Jon's channel. - Pattles
+        pass
 
     """Incomplete"""
     @commands.Cog.listener(name='on_guild_role_update')
