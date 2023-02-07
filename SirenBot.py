@@ -1,7 +1,7 @@
 """
 SF SirenBot by Jon_HQ, Toven, KaoSxEclipse, aaPattles, Alexander, & Bopped
 """
-
+# ignore this comment
 
 # Add the client ID (the bot's ID) here, or just replace self.client_id directly.
 CLIENT_ID = 0
