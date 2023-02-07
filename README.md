@@ -9,7 +9,7 @@ ServerForge's OSS SirenBot. Monitor dangerous changes in your communities and be
 * Users in watched roles' activity.
 * New webhooks created
 * Any bots removed (or this bot itself removed)
-* Any role being given any of the following perms: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server`.
+* Any role being given any of the following perms: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server`. - **Working on it (Pattles)**
 * Watch general chat to see if it gets locked. (Send messages or view channel disabled for verified role or @ everyone)
 * How many people are boosting the server / if the server is about to lose a boost
 
