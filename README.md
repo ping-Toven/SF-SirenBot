@@ -33,5 +33,5 @@ ServerForge's OSS SirenBot. Monitor dangerous changes in your communities and be
 * Help menu
 
 ## Completed
-After an item is completed from the [To Do](https://github.com/ping-Toven/SF-SirenBot/edit/main/README.md#to-do) list, *italicize* it, then add it below.
+After an item is completed from the [To Do](https://github.com/ping-Toven/SF-SirenBot/blob/main/README.md#to-do) list, *italicize* it, then add it below.
 * Test item - Pattles
