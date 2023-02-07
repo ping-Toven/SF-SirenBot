@@ -2,7 +2,6 @@
 ServerForge's OSS SirenBot. Monitor dangerous changes in your communities and be alerted as soon as they happen.
 
 ## To Do: 
-# 
 ### Events
 * New users added to watched roles
 * Users in watched roles kicked/banned
@@ -39,7 +38,6 @@ After an item is completed from the [To Do](https://github.com/ping-Toven/SF-Sir
 * Test item - Pattles
 
 ## Additional Information
-# 
 ### Permissions Required
 * View Channels
 * View Audit Log *(for webhook logging)*
