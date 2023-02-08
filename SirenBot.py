@@ -1,10 +1,6 @@
 """
 SF SirenBot by Jon_HQ, Toven, KaoSxEclipse, aaPattles, Alexander, & Bopped
 """
-# ignore this comment v2
-
-# Add the client ID (the bot's ID) here, or just replace self.client_id directly.
-CLIENT_ID = 0
 
 import datetime
 import json
@@ -31,7 +27,6 @@ INITIAL_EXTENSIONS = [
 class SirenBot(commands.Bot):
     def __init__(self):
         super().__init__(help_command=MyHelp(command_attrs={'aliases':['h'], 'description':'Displays a list of all available commands. Text command only.'}), command_prefix=commands.when_mentioned_or('sb!'), intents=discord.Intents.all(), case_insensitive=True, activity=discord.Activity(type=discord.ActivityType.watching, name=f'ServerForge'))
-        self.client_id = CLIENT_ID
         self.token = os.getenv('TOKEN')
 
         """Important information"""
