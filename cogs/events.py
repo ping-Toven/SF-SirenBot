@@ -55,6 +55,34 @@ class Events(commands.Cog):
         # Final product.
         scary_permissions = [role.permissions.administrator, role.permissions.manage_roles, role.permissions.mention_everyone, role.permissions.manage_webhooks, role.permissions.manage_channels, role.permissions.manage_guild]
 
+    @commands.Cog.listener(name='on_webhooks_update')
+    async def webhook_updates(self, channel):
+        # send_channel exists purely for testing purposes. Replace with a channel from db.
+        send_channel = self.bot.get_channel(964572977234595910)
+
+        # Useful links:
+        # https://discordpy.readthedocs.io/en/stable/api.html#discord.on_webhooks_update
+        # https://discordpy.readthedocs.io/en/stable/api.html#discord.Webhook
+        
+        # Getting the most recent webhook.
+        webhooks = await channel.webhooks()
+        recent_webhook = sorted(webhooks, key=lambda x: x.created_at, reverse=True)[0]
+
+        # Sending embed to the logging channel.
+        embed = discord.Embed(title='Webhook updated', description=f'A webhook has been updated/created/deleted in {channel.mention}.', color=discord.Color.random(), timestamp=discord.utils.utcnow())
+        embed.add_field(name='Webhook Author:', value=
+            recent_webhook.user.mention + '\n' + recent_webhook.user.name + '\n' + str(recent_webhook.user.id)
+            )
+        embed.add_field(name='Webhook Name:', value=recent_webhook.name)
+        embed.set_image(url=recent_webhook.display_avatar)
+        embed.set_footer(text='Displayed above is the webhook avatar.')
+
+        await send_channel.send(embed=embed)
+
+        # await channel.send(embed=embed)
+        # Will need to get logging channel info from db, waiting for Toven to create db
+
+
 
     """
     This is if a role with scary permissions is given to a member, which Jon didn't ask for
