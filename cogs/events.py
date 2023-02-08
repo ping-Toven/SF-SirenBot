@@ -55,6 +55,7 @@ class Events(commands.Cog):
         # Final product.
         scary_permissions = [role.permissions.administrator, role.permissions.manage_roles, role.permissions.mention_everyone, role.permissions.manage_webhooks, role.permissions.manage_channels, role.permissions.manage_guild]
 
+    """Partially Complete"""
     @commands.Cog.listener(name='on_webhooks_update')
     async def webhook_updates(self, channel):
         # send_channel exists purely for testing purposes. Replace with a channel from db.
@@ -81,7 +82,21 @@ class Events(commands.Cog):
 
         # await channel.send(embed=embed)
         # Will need to get logging channel info from db, waiting for Toven to create db
+        pass
 
+    @commands.Cog.listener(name='on_guild_leave')
+    async def bot_leaves_guild(self, guild):
+        # send_channel exists purely for testing purposes. Replace with a channel from db.
+        send_channel = self.bot.get_channel(964572977234595910)
+
+        # Sending embed to logging channel.
+        embed = discord.Embed(title=f'Bot Left {guild.name}', description=f'{self.bot.user.mention} has just left {guild.name}.', color=discord.Color.random(), timestamp=discord.utils.utcnow())
+
+        await send_channel.send(embed=embed)
+
+        # await channel.send(embed=embed)
+        # Will need to get logging channel info from db, waiting for Toven to create db
+        pass        
 
 
     """
