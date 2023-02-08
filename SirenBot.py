@@ -22,9 +22,10 @@ from dotenv import load_dotenv
 load_dotenv('token.env')
 
 INITIAL_EXTENSIONS = [
-    # "cogs.exampleCog",
+    # "cogs.example_cog",
     'cogs.events',
-    'cogs.testing' # remove this when final
+    'cogs.commands'
+    'cogs.testing' # Remove this when final.
     ]
   
 class SirenBot(commands.Bot):
