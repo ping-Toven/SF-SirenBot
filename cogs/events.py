@@ -57,7 +57,6 @@ class Events(commands.Cog):
 
     @commands.Cog.listener(name='on_webhooks_update')
     async def webhook_updates(self, channel):
-        
         # send_channel exists purely for testing purposes. Replace with a channel from db.
         send_channel = self.bot.get_channel(964572977234595910)
 
