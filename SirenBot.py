@@ -20,7 +20,7 @@ load_dotenv('token.env')
 INITIAL_EXTENSIONS = [
     # "cogs.example_cog",
     'cogs.events',
-    'cogs.commands'
+    'cogs.commands',
     'cogs.testing' # Remove this when final.
     ]
   
