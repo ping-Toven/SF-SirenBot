@@ -43,7 +43,7 @@ class Events(commands.Cog):
 
     """Needs logging channel code, then complete"""
     @commands.Cog.listener(name='on_guild_leave')
-    async def bot_leaves_guild(self, guild):
+    async def sirenbot_leaves_guild(self, guild):
         # send_channel exists purely for testing purposes. Replace with a channel from db.
         send_channel = self.bot.get_channel(964572977234595910)
 
@@ -56,6 +56,39 @@ class Events(commands.Cog):
         # Will need to get logging channel info from db, waiting for Toven to create db
         pass        
 
+    """Needs logging channel code & fix small issue, then complete"""
+    @commands.Cog.listener(name='on_guild_channel_update')
+    async def general_locked(self, before, after):
+        # send_channel exists purely for testing purposes. Replace with a channel from db.
+        send_channel = self.bot.get_channel(964572977234595910)
+
+        # Replace with a channel from db.
+        general_chat = self.bot.get_channel(964572977234595910)
+
+        """Checking if the channel updated is general_chat."""
+        if before.id != general_chat.id:
+            return
+
+        """Getting role objects."""
+        everyone_role = before.guild.default_role
+        
+        # Replace with verified role from db.
+        verified_role = before.guild.get_role(1065417951391531110)
+
+        """Checks general_chat is locked."""
+        # Need to add a check for if permission is set to neutral.
+        permissions_check = [after.permissions_for(verified_role).view_channel, after.permissions_for(verified_role).send_messages, after.permissions_for(everyone_role).view_channel, after.permissions_for(everyone_role).send_messages]
+        if all(permissions_check):
+            return
+        
+        """Sending embed to logging channel."""
+        embed = discord.Embed(title=f'#{general_chat} has just been locked.', description=f'[Jump!]({general_chat.jump_url})', color=discord.Color.random(), timestamp=discord.utils.utcnow())
+        embed.set_footer(text=f'Guild ID: {before.guild.id}')
+        await send_channel.send(embed=embed)
+
+        # await channel.send(embed=embed)
+        # Will need to get logging channel info from db, waiting for Toven to create db.
+        pass 
 
 async def setup(bot):
     await bot.add_cog(Events(bot))
