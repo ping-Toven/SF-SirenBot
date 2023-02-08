@@ -2,6 +2,10 @@
 ServerForge's OSS SirenBot. Monitor dangerous changes in your communities and be alerted as soon as they happen.
 
 ## To Do: 
+After an item is completed list, ~~strikethrough~~ it.
+Example:
+* ~~Testing~~
+
 ### Events
 * New users added to watched roles
 * Users in watched roles kicked/banned
@@ -9,7 +13,7 @@ ServerForge's OSS SirenBot. Monitor dangerous changes in your communities and be
 * Users in watched roles' activity.
 * New webhooks created
 * Any bots removed (or this bot itself removed)
-* Any role being given: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server` perms.
+* Any role being given any of the following perms: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server`.
 * Watch general chat to see if it gets locked. (Send messages or view channel disabled for verified role or @ everyone)
 * How many people are boosting the server / if the server is about to lose a boost
 
@@ -32,10 +36,6 @@ ServerForge's OSS SirenBot. Monitor dangerous changes in your communities and be
 ### Additional
 * Help menu
 * Fix the issue where the `help` command falls under 'No Category' in the help menu. I (Pattles) have just added a janky fix for the time being, visible in SirenBot.py
-
-## Completed
-After an item is completed from the [To Do](https://github.com/ping-Toven/SF-SirenBot/blob/main/README.md#to-do) list, *italicize* it, then add it below.
-* Test item - Pattles
 
 ## Additional Information
 ### Permissions Required
