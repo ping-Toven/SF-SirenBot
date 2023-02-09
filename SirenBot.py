@@ -30,11 +30,9 @@ class SirenBot(commands.Bot):
         self.token = os.getenv('TOKEN')
 
         """Important information"""
-        self.prefix = '!'
+        self.prefix = 'sb!'
         self.developer_ids = [165587622243074048, 301494278901989378, 90588733727858688, 675782936728961024, 632252672338165801, 480126550868754465]
         
-        self.version = '1.0'
-
         """Saved Texts, used for simplifying return messages."""
         self.syntax = 'Syntax:'
         self.hyrtcc = 'Uh oh! Have you ran the commmand correctly?'
@@ -104,7 +102,9 @@ class SirenBot(commands.Bot):
 
 class MyHelp(commands.HelpCommand):
     async def send_bot_help(self, mapping):
-        embed = discord.Embed(title=f'Help | {self.context.author}', color=discord.Color.random())
+        desc = 'ServerForge\'s OSS SirenBot. Monitor dangerous changes in your communities and be alerted as soon as they happen.\n\n' \
+            + f'> {SirenBot.user.mention}\'s prefix is `{SirenBot.prefix}`\n'
+        embed = discord.Embed(title=f'Help | {self.context.author}', description=desc, color=discord.Color.random())
 
         for cog, commands in mapping.items():
             if cog:
@@ -150,7 +150,7 @@ class MyHelp(commands.HelpCommand):
         if command.name in ['help'] and not command.cog:
             cog_name = 'General'
 
-        embed = discord.Embed(title=f'{cog_name} › {command.name}', description=command.description, color=discord.Color.random())
+        embed = discord.Embed(title=f'Help | {cog_name} › {command.name}', description=command.description, color=discord.Color.random())
         
         if True:
             required = ''

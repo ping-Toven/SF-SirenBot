@@ -12,9 +12,9 @@ class Commands(commands.Cog):
     def __init__(self, bot:SirenBot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(description='Say hello to the bot.')
     async def hello(self, ctx):
-        await ctx.send(f'Hello, {ctx.author.mention}')
+        await ctx.send(f'Hello {ctx.author.mention}!')
     
 
 async def setup(bot):
