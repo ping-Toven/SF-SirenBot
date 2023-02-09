@@ -1,20 +1,13 @@
 # SF-SirenBot
 ServerForge's OSS SirenBot. Monitor dangerous changes in your communities and be alerted as soon as they happen.
 
-## To Do: 
-After an item is completed list, ~~strikethrough~~ it.
-Example:
-* ~~Testing~~
-
+## Incomplete:
 ### Events
 * New users added to watched roles
 * Users in watched roles kicked/banned
 * Users in watched roles losing any roles
 * Users in watched roles' activity.
-* New webhooks created
-* Any bots removed (or this bot itself removed)
-* Any role being given any of the following perms: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server`.
-* Watch general chat to see if it gets locked. (Send messages or view channel disabled for verified role or @ everyone)
+* Any role being given: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server` perms.
 * How many people are boosting the server / if the server is about to lose a boost
 
 ### Commands
@@ -37,10 +30,16 @@ Example:
 * Help menu
 * Fix the issue where the `help` command falls under 'No Category' in the help menu. I (Pattles) have just added a janky fix for the time being, visible in SirenBot.py
 
+## In progress
+### Events
+* New webhooks created - *Needs logging channel from db*
+* Any bots removed (or this bot itself removed) - *Needs logging channel from db*
+* Watch general chat to see if it gets locked. (Send messages or view channel disabled for verified role or @everyone) - *Needs logging channel from db & perms check for neutral*
+
 ## Additional Information
 ### Permissions Required
 * View Channels
-* View Audit Log *(for webhook logging)*
 * Read Messages
 * Send Messages
 * Read Message History
+* Manage Channels *(for webhook events)*
