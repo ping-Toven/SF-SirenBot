@@ -32,9 +32,12 @@ ServerForge's OSS SirenBot. Monitor dangerous changes in your communities and be
 
 ## In progress
 ### Events
-* New webhooks created - *Needs logging channel from db*
-* Any bots removed (or this bot itself removed) - *Needs logging channel from db*
+* New webhooks created - *Need to figure out how to differentiate between webhook being created, updated, or deleted.*
 * Watch general chat to see if it gets locked. (Send messages or view channel disabled for verified role or @everyone) - *Needs logging channel from db & perms check for neutral*
+
+## Complete
+### Events
+* Any bots removed (or this bot itself removed)
 
 ## Additional Information
 ### Permissions Required

@@ -44,19 +44,18 @@ class Events(commands.Cog):
         # Will need to get logging channel info from db, waiting for Toven to create db
         pass
 
-    """Needs logging channel code, then complete"""
     @commands.Cog.listener(name='on_guild_leave')
     async def sirenbot_leaves_guild(self, guild):
-        # send_channel exists purely for testing purposes. Replace with a channel from db.
-        send_channel = self.bot.get_channel(964572977234595910)
+        logging_channel = self.bot.get_channel(get_log_channel()) if get_log_channel() != None else 0
+        
+        if logging_channel == 0:
+            return
+
 
         """Sending embed to logging channel."""
         embed = discord.Embed(title=f'Bot Left {guild.name}', description=f'{self.bot.user.mention} has just left {guild.name}.', color=discord.Color.random(), timestamp=discord.utils.utcnow())
 
-        await send_channel.send(embed=embed)
-
-        # await channel.send(embed=embed)
-        # Will need to get logging channel info from db, waiting for Toven to create db
+        await logging_channel.send(embed=embed)
         pass        
 
     """Needs logging channel code & fix small issue, then complete"""
