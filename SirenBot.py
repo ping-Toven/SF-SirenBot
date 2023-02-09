@@ -2,7 +2,7 @@
 SF SirenBot by Jon_HQ, Toven, KaoSxEclipse, aaPattles, Alexander, & Bopped
 """
 
-"""Replace with the RELATIVE path to your token."""
+"""Replace with the RELATIVE path to your files."""
 TOKEN_PATH = 'SF-SirenBot/token.env'
 DB_PATH = 'SF-SirenBot/sirenDB.db'
 
