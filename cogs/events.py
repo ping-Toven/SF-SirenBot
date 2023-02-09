@@ -36,7 +36,7 @@ class Events(commands.Cog):
         embed.set_footer(text='Displayed above is the webhook avatar.')
 
         await send_channel.send(embed=embed)
-
+        
         # await channel.send(embed=embed)
         # Will need to get logging channel info from db, waiting for Toven to create db
         pass
@@ -89,6 +89,43 @@ class Events(commands.Cog):
         # await channel.send(embed=embed)
         # Will need to get logging channel info from db, waiting for Toven to create db.
         pass 
+
+async def setup(bot):
+    await bot.add_cog(Events(bot))
+
+
+
+    """
+    This is if a role with scary permissions is given to a member, which Jon didn't ask for
+
+    @commands.Cog.listener(name='on_member_update')
+    async def scary_roles_given(self, before, after):        
+        \"\"\"Outdated code below.\"\"\"
+
+        # Testing, delete when final.
+        channel = before.guild.get_channel(964572977234595910)
+
+        if before.guild.id != 916133196184301668:
+            return
+
+        if not set(after.roles).difference(set(before.roles)):
+            return
+
+        # Final product.
+        if set(after.roles).difference(set(before.roles)):
+            member_roles = set(after.roles).difference(set(before.roles))
+            different_role = list(member_roles)[0]
+        
+        scary_permissions = [different_role.permissions.administrator, different_role.permissions.manage_roles, different_role.permissions.mention_everyone, different_role.permissions.manage_webhooks, different_role.permissions.manage_channels, different_role.permissions.manage_guild]
+
+        if any(scary_permissions):
+            await channel.send(True)
+    
+        return
+    """
+
+
+
 
 async def setup(bot):
     await bot.add_cog(Events(bot))

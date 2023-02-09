@@ -2,6 +2,10 @@
 SF SirenBot by Jon_HQ, Toven, KaoSxEclipse, aaPattles, Alexander, & Bopped
 """
 
+
+# Add the client ID (the bot's ID) here, or just replace self.client_id directly.
+CLIENT_ID = 0
+
 import datetime
 import json
 import os
@@ -18,15 +22,14 @@ from dotenv import load_dotenv
 load_dotenv('token.env')
 
 INITIAL_EXTENSIONS = [
-    # "cogs.example_cog",
-    'cogs.events',
-    'cogs.commands',
-    'cogs.testing' # Remove this when final.
+    # 'cogs.exampleCog',
+    'cogs.events'
     ]
   
 class SirenBot(commands.Bot):
     def __init__(self):
         super().__init__(help_command=MyHelp(command_attrs={'aliases':['h'], 'description':'Displays a list of all available commands. Text command only.'}), command_prefix=commands.when_mentioned_or('sb!'), intents=discord.Intents.all(), case_insensitive=True, activity=discord.Activity(type=discord.ActivityType.watching, name=f'ServerForge'))
+        self.client_id = CLIENT_ID
         self.token = os.getenv('TOKEN')
 
         """Important information"""
@@ -172,7 +175,7 @@ class MyHelp(commands.HelpCommand):
         if command.aliases:
             embed.add_field(name='Aliases:', value='`' + '`, `'.join(command.aliases)+ f'`, `{command.name}`', inline=False)
 
-        embed.set_footer(text=f'Use {SirenBot.prefix}help [command] for more info on a specific command.', icon_url=SirenBot.user.avatar)
+        embed.set_footer(text=f'Use {SirenBot.prefix}help [command] for more info on a specific command.', icon_url=SirenBot.icon_url)
         await self.context.reply(embed=embed)
         
       
