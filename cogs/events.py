@@ -6,6 +6,7 @@ from discord import app_commands
 from discord.ext import commands
 
 from SirenBot import *
+from functions import *
 
 
 class Events(commands.Cog):

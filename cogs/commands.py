@@ -2,10 +2,12 @@ import datetime
 from datetime import datetime, timezone
 
 import discord
+import sqlite3
 from discord import app_commands
 from discord.ext import commands
 
 from SirenBot import *
+from functions import *
 
 
 class Commands(commands.Cog):
