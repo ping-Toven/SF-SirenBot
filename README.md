@@ -51,4 +51,4 @@ ServerForge's OSS SirenBot. Monitor dangerous changes in your communities and be
 * Send Messages
 * Read Message History
 * Manage Channels *(for webhook events)*
-* Embed Links
+* Embed Links 
