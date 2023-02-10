@@ -16,6 +16,7 @@ class Events(commands.Cog):
     """Need to figure out how to differentiate between webhook being created, updated, or deleted."""
     @commands.Cog.listener(name='on_webhooks_update')
     async def webhook_updates(self, channel):
+        """Getting objects."""
         logging_channel = self.bot.get_channel(get_log_channel()) if get_log_channel() != None else 0
         
         if logging_channel == 0:
@@ -30,7 +31,7 @@ class Events(commands.Cog):
         recent_webhook = sorted(webhooks, key=lambda x: x.created_at, reverse=True)[0]
 
         """Sending embed to the logging channel."""
-        embed = discord.Embed(title='Webhook updated', description=f'A webhook has been updated in {channel.mention}.', color=discord.Color.random(), timestamp=discord.utils.utcnow())
+        embed = discord.Embed(title='Webhook updated', description=f'A webhook has been updated in {channel.mention}.', color=self.bot.color, timestamp=discord.utils.utcnow())
         embed.add_field(name='Webhook Author:', value=
             recent_webhook.user.mention + '\n' + recent_webhook.user.name + '\n' + str(recent_webhook.user.id)
             )
@@ -40,34 +41,45 @@ class Events(commands.Cog):
 
         await logging_channel.send(embed=embed)
 
-        # await channel.send(embed=embed)
-        # Will need to get logging channel info from db, waiting for Toven to create db
-        pass
-
     @commands.Cog.listener(name='on_guild_leave')
     async def sirenbot_leaves_guild(self, guild):
+        """Getting objects."""
         logging_channel = self.bot.get_channel(get_log_channel()) if get_log_channel() != None else 0
         
         if logging_channel == 0:
             return
 
         """Sending embed to logging channel."""
-        embed = discord.Embed(title=f'Bot Left {guild.name}', description=f'{self.bot.user.mention} has just left {guild.name}.', color=discord.Color.random(), timestamp=discord.utils.utcnow())
+        embed = discord.Embed(title=f'Bot Left {guild.name}', description=f'{self.bot.user.mention} has just left {guild.name}.', color=self.bot.color, timestamp=discord.utils.utcnow())
 
         await logging_channel.send(embed=embed)
         pass        
 
-    """Needs logging channel code & fix small issue, then complete"""
+    """Need to fix small issue, then complete"""
     @commands.Cog.listener(name='on_guild_channel_update')
     async def general_locked(self, before, after):
+        """Getting objects."""
         logging_channel = self.bot.get_channel(get_log_channel()) if get_log_channel() != None else 0
         
         if logging_channel == 0:
             return
 
+        general_chat = self.bot.get_channel(get_gen_chat()) if get_gen_chat() != None else 0
+        verified_role = before.guild.get_role(get_verified_role() if get_verified_role() != None else 0)
 
-        # Replace with a channel from db.
-        general_chat = self.bot.get_channel(964572977234595910)
+        if general_chat == 0:
+            embed = discord.Embed(self.bot.swr, description='There is no general chat defined in config.', color=self.bot.color)
+            
+            # Replace with a defined error channel. Waiting for toven to add to db.
+            await logging_channel.send(embed=embed)
+            return
+        
+        if verified_role == 0:
+            embed = discord.Embed(title=self.bot.swr, description='There is no verified role defined in config.', color=self.bot.color)
+
+            # Replace with a defined error channel. Waiting for toven to add to db.
+            await logging_channel.send(embed=embed)
+            return
 
         """Checking if the channel updated is general_chat."""
         if before.id != general_chat.id:
@@ -86,9 +98,9 @@ class Events(commands.Cog):
             return
         
         """Sending embed to logging channel."""
-        embed = discord.Embed(title=f'#{general_chat} has just been locked.', description=f'[Jump!]({general_chat.jump_url})', color=discord.Color.random(), timestamp=discord.utils.utcnow())
+        embed = discord.Embed(title=f'#{general_chat} has just been locked.', description=f'[Jump!]({general_chat.jump_url})', color=self.bot.color, timestamp=discord.utils.utcnow())
         embed.set_footer(text=f'Guild ID: {before.guild.id}')
-        await send_channel.send(embed=embed)
+        await logging_channel.send(embed=embed)
 
         # await channel.send(embed=embed)
         # Will need to get logging channel info from db, waiting for Toven to create db.
