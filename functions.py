@@ -15,6 +15,36 @@ def get_guild_id():
     return guild_id
 
 """ROLES"""
+def get_admin_role():
+    """
+    Gets the admin_role from sirenDB.db
+    rtype: int
+    """
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT admin_role FROM guild_config;")
+    try:
+        admin_role = cursor.fetchone()[0]
+    except Exception as e:
+        admin_role = None
+        print(e)
+    return admin_role
+
+def get_mod_role():
+    """
+    Gets the mod_role from sirenDB.db
+    rtype: int
+    """
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT mod_role FROM guild_config;")
+    try:
+        mod_role = cursor.fetchone()[0]
+    except Exception as e:
+        mod_role = None
+        print(e)
+    return mod_role
+
 def get_team_role():
     """
     Gets the team_role from sirenDB.db
