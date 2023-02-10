@@ -9,6 +9,7 @@ ServerForge's OSS SirenBot. Monitor dangerous changes in your communities and be
 * Users in watched roles' activity.
 * Any role being given: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server` perms.
 * How many people are boosting the server / if the server is about to lose a boost
+    > "if you keep track of when people boost (which wont work with people who are boosting multiple times) then you can track when their boost might be about to expire (but you'd have to double check when the boost is actually supposed to expire because they mightve renewed it)"
 
 ### Commands
 * /register modrole role:@role
