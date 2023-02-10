@@ -141,7 +141,7 @@ class Events(commands.Cog):
 
         await logging_channel.send(embed=embed)
 
-    """  """
+    """Need to get role creator, but I don't want to go into Audit Log"""
     @commands.Cog.listener(name='on_guild_role_update')
     async def scary_role_updated(self, before, after):
         if before.guild.id != get_guild_id():
