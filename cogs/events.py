@@ -111,8 +111,6 @@ class Events(commands.Cog):
         if role.guild.id != get_guild_id():
             return
 
-        test_channel = self.bot.get_channel(964572977234595910)
-
         """Getting objects."""
         logging_channel = self.bot.get_channel(get_log_channel()) if get_log_channel() != None else 0
         
@@ -140,6 +138,48 @@ class Events(commands.Cog):
         # embed.add_field(name='Created by:', value='')
 
         await logging_channel.send(embed=embed)
+
+    """  """
+    @commands.Cog.listener(name='on_guild_role_update')
+    async def scary_role_updated(self, before, after):
+        if before.guild.id != get_guild_id():
+            return
+
+        """Getting objects."""
+        logging_channel = self.bot.get_channel(get_log_channel()) if get_log_channel() != None else 0
+        
+        if logging_channel == 0:
+            return
+
+        if before.permissions == after.permissions:
+            return
+
+        """Getting all enabled permissions from updated role."""
+        role_true_permissions = []
+        for (permission, value) in after.permissions:
+            if value is True:
+                role_true_permissions.append(permission)
+
+        """Getting all scary permissions from updated role."""
+        role_scary_permissions = []
+        for permission in role_true_permissions:
+            if permission in ['administrator', 'manage_roles', 'mention_everyone', 'manage_webhooks', 'manage_channels', 'manage_guild']:
+                temp = permission.replace('_', ' ')
+                role_scary_permissions.append(temp.title())
+
+        if len(role_scary_permissions) == 0:
+            return
+
+        embed = discord.Embed(title='Scary role created', description=f'`{after.name}` has just been given `{len(role_scary_permissions)}` scary permission{"s" if len(role_scary_permissions) != 1 else ""}.', color=self.bot.color, timestamp=discord.utils.utcnow())
+        embed.add_field(name='Permissions:', value='\n'.join(role_scary_permissions))
+        
+        # Need to go into the Audit Log to check who created a role.
+        # It's a huge pain, so I'll won't be doing it (for now, at least).
+        # embed.add_field(name='Created by:', value='')
+
+        await logging_channel.send(embed=embed)
+
+        
 
 async def setup(bot):
     await bot.add_cog(Events(bot))
