@@ -25,6 +25,7 @@ INITIAL_EXTENSIONS = [
     # "cogs.example_cog",
     'cogs.events',
     'cogs.commands',
+    'cogs.developer',
     'cogs.testing' # Remove this when final.
     ]
   
