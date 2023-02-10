@@ -45,17 +45,18 @@ class Events(commands.Cog):
     async def sirenbot_leaves_guild(self, guild):
         """Getting objects."""
         logging_channel = self.bot.get_channel(get_log_channel()) if get_log_channel() != None else 0
-        guild_from_db = self.bot.get_guild(get_guild_id()) if get_guild_id() != None else 0
+        guild_from_db = self.bot.get_guild(get_guild_id()) # if get_guild_id() != None else 0
         
         if logging_channel == 0:
             return
 
-        if guild_from_db == 0:
-            embed = discord.Embed(title=self.bot.swr, description=f'There is no guild defined in config.', color=self.bot.color)
-
-            # Replace with a defined error channel. Waiting for toven to add to db.
-            await logging_channel.send(embed=embed)
-            return
+        # Commented out because Toven said all but logging_channel will be hardcoded in.
+        # if guild_from_db == 0:
+        #    embed = discord.Embed(title=self.bot.swr, description=f'There is no guild defined in config.', color=self.bot.color)
+        #
+        #    # Replace with a defined error channel. Waiting for toven to add to db.
+        #    await logging_channel.send(embed=embed)
+        #    return
 
         """Sending embed to logging channel."""
         embed = discord.Embed(title=f'Bot Left {guild.name}', description=f'{self.bot.user.mention} has just left {guild.name}.', color=self.bot.color, timestamp=discord.utils.utcnow())
@@ -72,23 +73,24 @@ class Events(commands.Cog):
         if logging_channel == 0:
             return
 
-        general_chat = self.bot.get_channel(get_gen_chat()) if get_gen_chat() != None else 0
-        verified_role = before.guild.get_role(get_verified_role() if get_verified_role() != None else 0)
+        general_chat = self.bot.get_channel(get_gen_chat()) # if get_gen_chat() != None else 0
+        verified_role = before.guild.get_role(get_verified_role()) # if get_verified_role() != None else 0)
         everyone_role = before.guild.default_role
 
-        if general_chat == 0:
-            embed = discord.Embed(self.bot.swr, description='There is no general chat defined in config.', color=self.bot.color)
-            
-            # Replace with a defined error channel. Waiting for toven to add to db.
-            await logging_channel.send(embed=embed)
-            return
+        # Commented out because Toven said all but logging_channel will be hardcoded in.
+        # if general_chat == 0:
+        #    embed = discord.Embed(self.bot.swr, description='There is no general chat defined in config.', color=self.bot.color)
+        #    
+        #    # Replace with a defined error channel. Waiting for toven to add to db.
+        #    await logging_channel.send(embed=embed)
+        #    return
         
-        if verified_role == 0:
-            embed = discord.Embed(title=self.bot.swr, description='There is no verified role defined in config.', color=self.bot.color)
-
-            # Replace with a defined error channel. Waiting for toven to add to db.
-            await logging_channel.send(embed=embed)
-            return
+        # if verified_role == 0:
+        #    embed = discord.Embed(title=self.bot.swr, description='There is no verified role defined in config.', color=self.bot.color)
+        #
+        #    # Replace with a defined error channel. Waiting for toven to add to db.
+        #    await logging_channel.send(embed=embed)
+        #    return
 
         """Checking if the channel updated is general_chat."""
         if before.id != general_chat.id:
