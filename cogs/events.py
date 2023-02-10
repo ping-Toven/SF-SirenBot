@@ -64,7 +64,7 @@ class Events(commands.Cog):
         await logging_channel.send(embed=embed)
         pass        
 
-    """Need to add verified role, fix small issue then complete"""
+    """Fix bug where embed gets sent when perm is set to TRUE"""
     @commands.Cog.listener(name='on_guild_channel_update')
     async def general_locked(self, before, after):
         """Getting objects."""
