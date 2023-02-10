@@ -105,5 +105,41 @@ class Events(commands.Cog):
         embed.set_footer(text=f'Guild ID: {before.guild.id}')
         await logging_channel.send(embed=embed)
 
+    """Need to get role creator, but I don't want to go into Audit Log"""
+    @commands.Cog.listener(name='on_guild_role_create')
+    async def scary_role_created(self, role):
+        if role.guild.id != get_guild_id():
+            return
+
+        test_channel = self.bot.get_channel(964572977234595910)
+
+        """Getting objects."""
+        logging_channel = self.bot.get_channel(get_log_channel()) if get_log_channel() != None else 0
+        
+        if logging_channel == 0:
+            return
+
+        """Getting all enabled permissions from role."""
+        role_true_permissions = []
+        for (permission, value) in role.permissions:
+            if value is True:
+                role_true_permissions.append(permission)
+
+        """Getting all scary permissions from role."""
+        role_scary_permissions = []
+        for permission in role_true_permissions:
+            if permission in ['administrator', 'manage_roles', 'mention_everyone', 'manage_webhooks', 'manage_channels', 'manage_guild']:
+                temp = permission.replace('_', ' ')
+                role_scary_permissions.append(temp.title())
+
+        embed = discord.Embed(title='Scary role created', description=f'`{role.name}` has just been created with `{len(role_scary_permissions)}` scary permission{"s" if len(role_scary_permissions) != 1 else ""}.', color=self.bot.color, timestamp=discord.utils.utcnow())
+        embed.add_field(name='Permissions:', value='\n'.join(role_scary_permissions))
+        
+        # Need to go into the Audit Log to check who created a role.
+        # It's a huge pain, so I'll won't be doing it (for now, at least).
+        # embed.add_field(name='Created by:', value='')
+
+        await logging_channel.send(embed=embed)
+
 async def setup(bot):
     await bot.add_cog(Events(bot))
