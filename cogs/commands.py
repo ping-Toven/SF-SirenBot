@@ -5,7 +5,7 @@ import discord
 import sqlite3
 from discord import app_commands
 from discord.ext import commands
-from typing import Literal
+from typing import *
 
 from SirenBot import *
 from functions import *
@@ -19,6 +19,7 @@ class Commands(commands.Cog):
     async def hello(self, ctx):
         await ctx.send(f'Hello {ctx.author.mention}!')
 
+    """Need to figure out who's allowed to use this cmd."""
     @commands.hybrid_command(description='Displays the current bot config.')
     async def config(self, ctx):
         """Getting objects."""
@@ -71,13 +72,5 @@ class Commands(commands.Cog):
     async def modrole(self, ctx, role:discord.Role):
         await ctx.send(role.mention)
     
-
-
-
-
-
-
-    
-
 async def setup(bot):
     await bot.add_cog(Commands(bot))
