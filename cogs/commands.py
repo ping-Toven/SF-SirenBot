@@ -18,6 +18,7 @@ class Commands(commands.Cog):
     async def hello(self, ctx):
         await ctx.send(f'Hello {ctx.author.mention}!')
 
+    """Incomplete"""
     @commands.hybrid_command(description='Displays the current bot config.')
     async def config(self, ctx):
         guild = self.bot.get_guild(get_guild_id())
@@ -43,7 +44,33 @@ class Commands(commands.Cog):
         #    )
         
         await ctx.send(embed=embed)
-        pass
+
+    """Incomplete"""
+    @commands.command(description='Check if the bot is missing any permissions for it to work properly.')
+    async def permscheck(self, ctx):
+        if ctx.guild.id != get_guild_id():
+            return
+
+        bot_member_obj = ctx.guild.get_member(self.bot.user.id)
+
+        """Getting all permissions from bot.."""
+        bot_permissions = ''
+        for (permission, value) in bot_member_obj.guild_permissions:
+            if value is True:
+                bot_permissions += f'✅ {permission} \n'
+            else:
+                bot_permissions += f'❌ {permission} \n'
+
+        embed = discord.Embed(title=f'{self.bot.user} Permissions', description=bot_permissions, color=self.bot.color)
+        await ctx.send(embed=embed)
+
+
+
+
+
+
+
+
     
 
 async def setup(bot):
