@@ -62,7 +62,7 @@ class SirenBot(commands.Bot):
             pass
 
         if isinstance(error, (MissingRequiredArgument, BadArgument)):
-            embed = discord.Embed(title=self.hyrtcc, description=f'Invalid command usage. \n\nFor more information about this command, type `{self.prefix}help {ctx.command.name}`.', color=discord.Color.random())
+            embed = discord.Embed(title=self.hyrtcc, description=f'Invalid command usage. \n\nFor more information about this command, type `{self.prefix}help {ctx.command.name}`.', color=self.color)
             
             """Checking if the command has arguments, and therefore required syntax for the embed."""
             required = ''
@@ -96,7 +96,7 @@ class SirenBot(commands.Bot):
 
             desc = f"I'm {self.user.mention}. My current prefixes are `{self.prefix}` & `/`.\n\n" \
                 + f"To view all my commands, type `{self.prefix}help`."
-            embed = discord.Embed(description=desc, color=discord.Color.random(), timestamp=discord.utils.utcnow())
+            embed = discord.Embed(description=desc, color=self.color, timestamp=discord.utils.utcnow())
             embed.set_footer(text=f"{self.user} • Asked by {message.author}", icon_url=message.author.avatar)
             await message.reply(embed=embed)
 
@@ -109,7 +109,7 @@ class MyHelp(commands.HelpCommand):
     async def send_bot_help(self, mapping):
         desc = 'ServerForge\'s OSS SirenBot. Monitor dangerous changes in your communities and be alerted as soon as they happen.\n\n' \
             + f'> {SirenBot.user.mention}\'s prefix is `{SirenBot.prefix}`\n'
-        embed = discord.Embed(title=f'Help | {self.context.author}', description=desc, color=discord.Color.random())
+        embed = discord.Embed(title=f'Help | {self.context.author}', description=desc, color=SirenBot.color)
 
         for cog, commands in mapping.items():
             if cog:
@@ -155,7 +155,7 @@ class MyHelp(commands.HelpCommand):
         if command.name in ['help'] and not command.cog:
             cog_name = 'General'
 
-        embed = discord.Embed(title=f'Help | {cog_name} › {command.name}', description=command.description, color=discord.Color.random())
+        embed = discord.Embed(title=f'Help | {cog_name} {f"› {command.parent} " if command.parent != None else ""}› {command.name}', description=command.description, color=SirenBot.color)
         
         if True:
             required = ''
@@ -183,8 +183,28 @@ class MyHelp(commands.HelpCommand):
       
     """!help <group>"""
     async def send_group_help(self, group):
-        return
-        await self.context.reply("This is help group")
+
+        embed = discord.Embed(title=f'Help | {group.cog_name} › {group}', description=group.description, color=SirenBot.color)
+        
+        if True:
+            required = ''
+            optional = ''
+            foobar = ''
+            if '<' in group.signature:
+                required = '`<> - required`\n'
+            if '[' in group.signature:
+                optional = '`[] - optional`\n'
+            if '|' in group.signature:
+                foobar = '`item1/item2 - choose either item1 or item2`\n'
+
+        if required != '' or optional != '':
+            embed.add_field(name='Syntax:', value=required + optional + foobar, inline=False)
+
+        signature = group.signature.replace("=", "").replace("None", "").replace("...", "").replace("|", "/").replace('"', "").replace("_", " ")
+        embed.add_field(name='Usage:', value=f"```{SirenBot.prefix if 'Slash command only.' not in group.description else '/'}{group} {signature}```", inline=False)
+
+        embed.set_footer(text=f'Use {SirenBot.prefix}help [command] for more info on a specific command.', icon_url=SirenBot.user.avatar)
+        await self.context.reply(embed=embed)
     
     """!help <cog>"""
     async def send_cog_help(self, cog):
