@@ -35,7 +35,10 @@ ServerForge's OSS SirenBot. Monitor dangerous changes in your communities and be
 * New webhooks created - *Need to figure out how to differentiate between webhook being created, updated, or deleted.*
 * Watch general chat to see if it gets locked. (Send messages or view channel disabled for verified role or @everyone) - *Needs logging channel from db & perms check for neutral*
 * Any role being CREATED WITH: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server` perms. - *Need to get role creator, thru Audit Log :pepesad:*
-* Any role being UPDATED TO INCLUDE: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server` perms.
+* Any role being UPDATED TO INCLUDE: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server` perms. - *Need to get role creator, thru Audit Log :pepesad:*
+
+### Commands
+* /register modrole role:@role - *need Toven to complete*
 
 ### Additional
 * Figure out required permissions for bot to function properly.
