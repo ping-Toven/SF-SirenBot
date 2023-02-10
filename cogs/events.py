@@ -45,7 +45,7 @@ class Events(commands.Cog):
     async def sirenbot_leaves_guild(self, guild):
         """Getting objects."""
         logging_channel = self.bot.get_channel(get_log_channel()) if get_log_channel() != None else 0
-        guild_from_db = self.bot.get_guild(get_guild_id()) # if get_guild_id() != None else 0
+        # guild_from_db = self.bot.get_guild(get_guild_id()) # if get_guild_id() != None else 0
         
         if logging_channel == 0:
             return
