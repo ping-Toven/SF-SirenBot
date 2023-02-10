@@ -37,7 +37,7 @@ ServerForge's OSS SirenBot. Monitor dangerous changes in your communities and be
 * Any role being CREATED WITH: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server` perms. - *Need to get role creator, thru Audit Log :pepesad:*
 * Any role being UPDATED TO INCLUDE: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server` perms.
 
-### Testing
+### Additional
 * Figure out required permissions for bot to function properly.
 
 ## Complete
