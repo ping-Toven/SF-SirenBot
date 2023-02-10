@@ -36,6 +36,7 @@ class SirenBot(commands.Bot):
         """Important information"""
         self.prefix = 'sb!'
         self.developer_ids = [165587622243074048, 301494278901989378, 90588733727858688, 675782936728961024, 632252672338165801, 480126550868754465]
+        self.color = discord.Color.blurple()
         
         """Saved Texts, used for simplifying return messages."""
         self.syntax = 'Syntax:'
