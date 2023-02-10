@@ -5,6 +5,7 @@ import discord
 import sqlite3
 from discord import app_commands
 from discord.ext import commands
+from typing import Literal
 
 from SirenBot import *
 from functions import *
@@ -18,31 +19,29 @@ class Commands(commands.Cog):
     async def hello(self, ctx):
         await ctx.send(f'Hello {ctx.author.mention}!')
 
-    """Incomplete"""
     @commands.hybrid_command(description='Displays the current bot config.')
     async def config(self, ctx):
-        guild = self.bot.get_guild(get_guild_id())
-        general_chat = self.bot.get_channel(get_gen_chat())
+        """Getting objects."""
+        guild = self.bot.get_guild(get_guild_id()) if get_guild_id != None else None
+        general_chat = self.bot.get_channel(get_gen_chat()) if get_gen_chat != None else None
+        logging_channel = self.bot.get_channel(get_log_channel()) if get_log_channel != None else None
+        mod_role = ctx.guild.get_role(get_mod_role()) if get_mod_role != None else None
+        admin_role = ctx.guild.get_role(get_admin_role()) if get_admin_role != None else None
+        team_role = ctx.guild.get_role(get_team_role()) if get_team_role != None else None
+        verified_role = ctx.guild.get_role(get_verified_role()) if get_verified_role != None else None
 
-        desc = f'**Guild ID:** {guild.id} \n' \
-            + f'**Mod Role:** {""} \n' \
-            + f'**Admin Role:** {""} \n' \
-            + f'**Team Role:** {""} \n' \
-            + f'**General Channel:** {""} \n' \
-            + f'**Verified Role:** {""} \n' \
-            + f'**Log Channel:** {""} \n' \
-            + f'**Log Webhook:** {""} \n'
-
-        # Commented out until I decide which embed style looks best.
-
-        embed = discord.Embed(title=f'{guild.name} Config', description=desc, color=discord.Color.random())
-        # embed.add_field(name='Guild:', value=guild.id)
-        # embed.add_field(name='#general', value=
-        #    general_chat.mention + '\n' \
-        #    + '#' + general_chat.name + '\n' \
-        #    + '`' + str(general_chat.id) + '`'
-        #    )
+        """Sending embed."""
+        embed = discord.Embed(title=f'{guild.name} Config', color=self.bot.color)
+        embed.add_field(name='Guild:', value=f'{guild.name}\n`{guild.id}`' if guild != None else '`None`')
+        embed.add_field(name='Admin Role:', value=f'{admin_role}\n`{admin_role.id}`\n{admin_role.mention}' if admin_role != None else '`None`')
+        embed.add_field(name='Mod Role:', value=f'{mod_role}\n`{mod_role.id}`\n{mod_role.mention}' if mod_role != None else '`None`')
+        embed.add_field(name='Team Role:', value=f'{team_role}\n`{team_role.id}`\n{team_role.mention}' if team_role != None else '`None`')
+        embed.add_field(name='Verified Role:', value=f'{verified_role}\n`{verified_role.id}`\n{verified_role.mention}' if verified_role != None else '`None`')
+        embed.add_field(name='General Channel:', value=f'{general_chat}\n`{general_chat.id}`\n{general_chat.mention}' if general_chat != None else '`None`')
+        embed.add_field(name='Logging Channel:', value=f'{logging_channel}\n`{logging_channel.id}`\n{logging_channel.mention}' if logging_channel != None else '`None`')
         
+        embed.set_thumbnail(url=self.bot.user.avatar)
+        embed.set_footer(text=f'Bot ID: {self.bot.user.id}')
         await ctx.send(embed=embed)
 
     """Incomplete"""
@@ -64,7 +63,14 @@ class Commands(commands.Cog):
         embed = discord.Embed(title=f'{self.bot.user} Permissions', description=bot_permissions, color=self.bot.color)
         await ctx.send(embed=embed)
 
+    @commands.group(invoke_without_command=True, description='Register a role or channel to the config.')
+    async def register(self, ctx):
+        pass
 
+    @register.command(description='Register a moderator role to the config.')
+    async def modrole(self, ctx, role:discord.Role):
+        await ctx.send(role.mention)
+    
 
 
 
