@@ -55,7 +55,7 @@ class Events(commands.Cog):
         await logging_channel.send(embed=embed)
         pass        
 
-    """Need to fix small issue, then complete"""
+    """Need to add verified role, fix small issue then complete"""
     @commands.Cog.listener(name='on_guild_channel_update')
     async def general_locked(self, before, after):
         """Getting objects."""
@@ -66,6 +66,7 @@ class Events(commands.Cog):
 
         general_chat = self.bot.get_channel(get_gen_chat()) if get_gen_chat() != None else 0
         verified_role = before.guild.get_role(get_verified_role() if get_verified_role() != None else 0)
+        everyone_role = before.guild.default_role
 
         if general_chat == 0:
             embed = discord.Embed(self.bot.swr, description='There is no general chat defined in config.', color=self.bot.color)
@@ -85,12 +86,6 @@ class Events(commands.Cog):
         if before.id != general_chat.id:
             return
 
-        """Getting role objects."""
-        everyone_role = before.guild.default_role
-        
-        # Replace with verified role from db.
-        verified_role = before.guild.get_role(1065417951391531110)
-
         """Checks general_chat is locked."""
         # Need to add a check for if permission is set to neutral.
         permissions_check = [after.permissions_for(verified_role).view_channel, after.permissions_for(verified_role).send_messages, after.permissions_for(everyone_role).view_channel, after.permissions_for(everyone_role).send_messages]
@@ -101,10 +96,6 @@ class Events(commands.Cog):
         embed = discord.Embed(title=f'#{general_chat} has just been locked.', description=f'[Jump!]({general_chat.jump_url})', color=self.bot.color, timestamp=discord.utils.utcnow())
         embed.set_footer(text=f'Guild ID: {before.guild.id}')
         await logging_channel.send(embed=embed)
-
-        # await channel.send(embed=embed)
-        # Will need to get logging channel info from db, waiting for Toven to create db.
-        pass 
 
 async def setup(bot):
     await bot.add_cog(Events(bot))
