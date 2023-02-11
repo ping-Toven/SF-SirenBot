@@ -111,6 +111,7 @@ class MyHelp(commands.HelpCommand):
         desc = 'ServerForge\'s OSS SirenBot. Monitor dangerous changes in your communities and be alerted as soon as they happen.\n\n' \
             + f'> {SirenBot.user.mention}\'s prefix is `{SirenBot.prefix}`\n'
         embed = discord.Embed(title=f'Help | {self.context.author}', description=desc, color=SirenBot.color)
+        embed.set_thumbnail(url=SirenBot.user.avatar)
 
         for cog, commands in mapping.items():
             if cog:
@@ -118,7 +119,7 @@ class MyHelp(commands.HelpCommand):
 
                 """Adding embed fields for each command category."""
                 """Not displaying hidden categories."""
-                if cog_name not in ['Developer', 'Events']:
+                if cog_name not in ['Developer', 'Events', 'Testing']: # Remove 'Testing' after completion
                     command_list = []
                     for command in commands:
                         command_list.append(command.name)
@@ -129,7 +130,7 @@ class MyHelp(commands.HelpCommand):
                     embed.add_field(name=cog_name, value=f'`{command_list}`', inline=False)
 
                 """Displaying hidden categories is author is a developer."""
-                if cog_name in ['Developer'] and self.context.author.id in SirenBot.developer_ids:
+                if cog_name in ['Developer', 'Testing'] and self.context.author.id in SirenBot.developer_ids: # Remove 'Testing' after completion
                     command_list = []
                     for command in commands:
                         command_list.append(command.name)
@@ -145,7 +146,7 @@ class MyHelp(commands.HelpCommand):
         cog_name = command.cog_name
     
         """Cancels the command if the author is attempting to view a command from a hidden category."""
-        if cog_name in ['Developer', 'Events'] and self.context.author.id not in SirenBot.developer_ids:
+        if cog_name in ['Developer', 'Events', 'Testing'] and self.context.author.id not in SirenBot.developer_ids: # Remove 'Testing' after completion
             return
 
         if command.cog:
@@ -188,11 +189,12 @@ class MyHelp(commands.HelpCommand):
         embed = discord.Embed(title=f'Help | {group.cog_name} › {group}', description=group.description, color=SirenBot.color)
 
         commands_list = [command.name for command in group.commands]
+        commands_list.sort()
         
         signature = group.signature.replace("=", "").replace("None", "").replace("...", "").replace("|", "/").replace('"', "").replace("_", " ") if group.signature else None
 
         if not signature:
-            # Temporarily hardcoded in until I find a better way to code this in.
+            # Temporarily hardcoded until I find a better way to do this.
             if group.name == 'register':
                 signature = '<subcommand>'
         if True:
