@@ -186,24 +186,31 @@ class MyHelp(commands.HelpCommand):
     async def send_group_help(self, group):
 
         embed = discord.Embed(title=f'Help | {group.cog_name} › {group}', description=group.description, color=SirenBot.color)
+
+        commands_list = [command.name for command in group.commands]
         
+        signature = group.signature.replace("=", "").replace("None", "").replace("...", "").replace("|", "/").replace('"', "").replace("_", " ") if group.signature else None
+
+        if not signature:
+            # Temporarily hardcoded in until I find a better way to code this in.
+            if group.name == 'register':
+                signature = '<subcommand>'
         if True:
             required = ''
             optional = ''
             foobar = ''
-            if '<' in group.signature:
+            if '<' in signature:
                 required = '`<> - required`\n'
-            if '[' in group.signature:
+            if '[' in signature:
                 optional = '`[] - optional`\n'
-            if '|' in group.signature:
+            if '|' in signature:
                 foobar = '`item1/item2 - choose either item1 or item2`\n'
 
         if required != '' or optional != '':
             embed.add_field(name='Syntax:', value=required + optional + foobar, inline=False)
-
-        signature = group.signature.replace("=", "").replace("None", "").replace("...", "").replace("|", "/").replace('"', "").replace("_", " ")
-        embed.add_field(name='Usage:', value=f"```{SirenBot.prefix if 'Slash command only.' not in group.description else '/'}{group} {signature}```", inline=False)
-
+    
+        embed.add_field(name='Usage:', value=f"```{SirenBot.prefix if 'Slash command only.' not in group.description else '/'}{group} <subcommand>```", inline=False)
+        embed.add_field(name='Subcommands:', value='`' + '`, `'.join(commands_list) + '`', inline=False)
         embed.set_footer(text=f'Use {SirenBot.prefix}help [command] for more info on a specific command.', icon_url=SirenBot.user.avatar)
         await self.context.reply(embed=embed)
     
