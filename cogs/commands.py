@@ -70,6 +70,12 @@ class Commands(commands.Cog):
 
     @register.command(description='Register a moderator role to the config.')
     async def modrole(self, ctx, role:discord.Role):
+        # Need code from Toven to add modrole ID to db.
+        await ctx.send(role.mention)
+
+    @register.command(description='Register an administrator role to the config.')
+    async def adminrole(self, ctx, role:discord.Role):
+        # Need code from Toven to add modrole ID to db.
         await ctx.send(role.mention)
     
 async def setup(bot):
