@@ -10,13 +10,6 @@ ServerForge's OSS SirenBot. Monitor dangerous changes in your communities and be
 * How many people are boosting the server / if the server is about to lose a boost
     > "if you keep track of when people boost (which wont work with people who are boosting multiple times) then you can track when their boost might be about to expire (but you'd have to double check when the boost is actually supposed to expire because they mightve renewed it)"
 
-### Commands
-* /register modrole role:@role
-* /register adminrole role:@role
-* /register teamrole role:@role
-* /register generalchannel channel:#general
-* /register verifiedrole role:@role
-
 ### Functions
 * Send a webhook to command server (hardcoded in) when the activity above happens.
 * Send a webhook to command server when specific really bad activity happens.
@@ -38,7 +31,11 @@ ServerForge's OSS SirenBot. Monitor dangerous changes in your communities and be
 * Any role being UPDATED TO INCLUDE: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server` perms. - *Need to get role creator, thru Audit Log :pepesad:*
 
 ### Commands
-* /register modrole role:@role - *need Toven to complete*
+* /register modrole role:@role - *need example code to add IDs to db to complete*
+* /register adminrole role:@role - *need example code to add IDs to db to complete*
+* /register teamrole role:@role
+* /register generalchannel channel:#general
+* /register verifiedrole role:@role
 
 ### Additional
 * Figure out required permissions for bot to function properly.

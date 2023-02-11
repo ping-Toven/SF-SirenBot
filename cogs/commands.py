@@ -70,13 +70,30 @@ class Commands(commands.Cog):
 
     @register.command(description='Register a moderator role to the config.')
     async def modrole(self, ctx, role:discord.Role):
-        # Need code from Toven to add modrole ID to db.
+        # Need code from Toven to add mod_role ID to db.
         await ctx.send(role.mention)
 
     @register.command(description='Register an administrator role to the config.')
     async def adminrole(self, ctx, role:discord.Role):
-        # Need code from Toven to add modrole ID to db.
+        # Need code from Toven to add admin_role ID to db.
         await ctx.send(role.mention)
+
+    @register.command(description='Register a team role to the config.')
+    async def teamrole(self, ctx, role:discord.Role):
+        # Need code from Toven to add team_role ID to db.
+        await ctx.send(role.mention)
+
+    @register.command(description='Register an administrator role to the config.')
+    async def verifiedrole(self, ctx, role:discord.Role):
+        # Need code from Toven to add verified_role ID to db.
+        await ctx.send(role.mention)
+
+    @register.command(description='Register an administrator role to the config.')
+    async def generalchannel(self, ctx, channel:discord.TextChannel):
+        # Need code from Toven to add general_channel ID to db.
+        await ctx.send(channel.mention)
+
+
     
 async def setup(bot):
     await bot.add_cog(Commands(bot))
