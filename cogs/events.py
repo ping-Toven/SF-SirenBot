@@ -41,6 +41,7 @@ class Events(commands.Cog):
 
         await logging_channel.send(embed=embed)
 
+    """NULCDS, see README.md for more info"""
     @commands.Cog.listener(name='on_guild_leave')
     async def sirenbot_leaves_guild(self, guild):
         """Getting objects."""
@@ -109,7 +110,7 @@ class Events(commands.Cog):
 
     """Need to get role creator, but I don't want to go into Audit Log"""
     @commands.Cog.listener(name='on_guild_role_create')
-    async def scary_role_created(self, role):
+    async def watched_role_created(self, role):
         if role.guild.id != get_guild_id():
             return
 
@@ -143,7 +144,7 @@ class Events(commands.Cog):
 
     """Need to get role creator, but I don't want to go into Audit Log"""
     @commands.Cog.listener(name='on_guild_role_update')
-    async def scary_role_updated(self, before, after):
+    async def watched_role_updated(self, before, after):
         if before.guild.id != get_guild_id():
             return
 
@@ -180,6 +181,31 @@ class Events(commands.Cog):
         # embed.add_field(name='Created by:', value='')
 
         await logging_channel.send(embed=embed)
+
+    """NULCDS, see README.md for more info"""
+    @commands.Cog.listener(name='on_member_update')
+    async def watched_roles_given(self, before, after):
+        if before.guild.id != get_guild_id():
+            return
+
+        logging_channel = self.bot.get_channel(get_log_channel())
+        watched_roles = {before.guild.get_role(get_admin_role()), before.guild.get_role(get_mod_role()), before.guild.get_role(get_team_role())}
+    
+        """When someone RECEIVES a watched role, it gets logged."""
+        if set(after.roles).difference(set(before.roles)):
+            different_role = set(after.roles).difference(set(before.roles))
+            different_role = list(different_role)[0]
+
+            if different_role not in watched_roles:
+                return
+
+            embed = discord.Embed(title='Watched role given', description=f'{different_role.mention} has been given to {after.mention}.', color=self.bot.color, timestamp=discord.utils.utcnow())
+            embed.set_author(name=after, icon_url=after.avatar)
+            embed.set_footer(text=f'User ID: {after.id}')
+            await logging_channel.send(embed=embed)
+        
+        
+
 
         
 
