@@ -3,7 +3,6 @@ ServerForge's OSS SirenBot. Monitor dangerous changes in your communities and be
 
 ## Incomplete:
 ### Events
-* New users added to watched roles
 * Users in watched roles kicked/banned
 * Users in watched roles losing any roles
 * Users in watched roles' activity.
@@ -26,23 +25,32 @@ ServerForge's OSS SirenBot. Monitor dangerous changes in your communities and be
 ## In progress
 ### Events
 * New webhooks created - *Need to figure out how to differentiate between webhook being created, updated, or deleted.*
-* Watch general chat to see if it gets locked. (Send messages or view channel disabled for verified role or @everyone) - *Needs logging channel from db & perms check for neutral*
+* Watch general chat to see if it gets locked. (Send messages or view channel disabled for verified role or @everyone) - *Needs perms check for neutral*
 * Any role being CREATED WITH: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server` perms. - *Need to get role creator, thru Audit Log :pepesad:*
 * Any role being UPDATED TO INCLUDE: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server` perms. - *Need to get role creator, thru Audit Log :pepesad:*
 
 ### Commands
 * /register modrole role:@role - *need example code to add IDs to db to complete*
 * /register adminrole role:@role - *need example code to add IDs to db to complete*
-* /register teamrole role:@role
-* /register generalchannel channel:#general
-* /register verifiedrole role:@role
+* /register teamrole role:@role - *need example code to add IDs to db to complete*
+* /register generalchannel channel:#general - *need example code to add IDs to db to complete*
+* /register verifiedrole role:@role - *need example code to add IDs to db to complete*
 
 ### Additional
 * Figure out required permissions for bot to function properly.
 
-## Complete
+## 99% Complete
+Make sure to update logging channels depending on the severity of the event:
+* **N**eed
+* **U**pdated
+* **L**ogging
+* **C**hannel
+* **D**epending on
+* **S**everity
+
 ### Events
-* Any bots removed (or this bot itself removed)
+* New users added to watched roles - *NULCDS*
+* Any bots removed (or this bot itself removed) - *NULCDS*
 
 ## Additional Information
 ### Permissions Required
