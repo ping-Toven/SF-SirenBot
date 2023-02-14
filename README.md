@@ -1,6 +1,11 @@
 # SF-SirenBot
 ServerForge's OSS SirenBot. Monitor dangerous changes in your communities and be alerted as soon as they happen.
 
+# How to Setup
+Open `config.env` and add channel IDs for your logging channels:
+* Need logging channel names
+
+# To Do List
 ## Incomplete:
 ### Events
 * Users in watched roles kicked/banned
