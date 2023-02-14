@@ -25,10 +25,6 @@ class Events(commands.Cog):
         if critical_logs is None:
             print('Error in webhook_updates: You haven\'t added a channel ID to CRITICAL_LOGS, have you?\n Add it in config.env ASAP and restart the bot.')
             return
-
-        # Useful links:
-        # https://discordpy.readthedocs.io/en/stable/api.html#discord.on_webhooks_update
-        # https://discordpy.readthedocs.io/en/stable/api.html#discord.Webhook
         
         """Getting the most recent webhook."""
         webhooks = await channel.webhooks()
