@@ -3,7 +3,6 @@ SF SirenBot by Jon_HQ, Toven, KaoSxEclipse, aaPattles, Alexander, & Bopped
 """
 
 """Replace with the RELATIVE path to your files."""
-TOKEN_PATH = 'SF-SirenBot/token.env'
 DB_PATH = 'SF-SirenBot/sirenDB.db'
 
 import datetime
@@ -19,7 +18,7 @@ from discord.ext import commands
 from discord.ext.commands.errors import *
 from dotenv import load_dotenv
 
-load_dotenv(TOKEN_PATH) 
+load_dotenv('SF-SirenBot/token.env') 
 
 INITIAL_EXTENSIONS = [
     # "cogs.example_cog",
