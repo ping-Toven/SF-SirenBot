@@ -2,8 +2,10 @@
 SF SirenBot by Jon_HQ, Toven, KaoSxEclipse, aaPattles, Alexander, & Bopped
 """
 
-"""Replace with the RELATIVE path to your files."""
 DB_PATH = 'SF-SirenBot/sirenDB.db'
+
+"""CONFIG"""
+PREFIX = 'sb!'
 
 import datetime
 import json
@@ -30,11 +32,11 @@ INITIAL_EXTENSIONS = [
   
 class SirenBot(commands.Bot):
     def __init__(self):
-        super().__init__(help_command=MyHelp(command_attrs={'aliases':['h'], 'description':'Displays a list of all available commands. Text command only.'}), command_prefix=commands.when_mentioned_or('sb!'), intents=discord.Intents.all(), case_insensitive=True, activity=discord.Activity(type=discord.ActivityType.watching, name=f'ServerForge'))
+        super().__init__(help_command=MyHelp(command_attrs={'aliases':['h'], 'description':'Displays a list of all available commands. Text command only.'}), command_prefix=commands.when_mentioned_or(PREFIX), intents=discord.Intents.all(), case_insensitive=True, activity=discord.Activity(type=discord.ActivityType.watching, name=f'ServerForge'))
         self.token = os.getenv('TOKEN')
 
         """Important information"""
-        self.prefix = 'sb!'
+        self.prefix = PREFIX
         self.developer_ids = [165587622243074048, 301494278901989378, 90588733727858688, 675782936728961024, 632252672338165801, 480126550868754465]
         self.color = discord.Color.yellow()
         
