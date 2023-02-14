@@ -1,6 +1,9 @@
 import discord
 import sqlite3
 from SirenBot import *
+from dotenv import load_dotenv
+
+load_dotenv('SF-SirenBot/config.env') 
 
 """OTHER"""
 def get_guild_id():
@@ -105,3 +108,43 @@ def get_log_channel():
         log_channel = None
         print(e)
     return log_channel
+
+"""config.env FUNCTIONS"""
+def get_general_logs():
+    """
+    gets general_logs from config.env
+    rtype: int
+    """
+    general_logs_str = os.getenv('GENERAL_LOGS')
+    try:
+        general_logs_id = int(general_logs_id)
+    except:
+        general_logs_id = None
+    return general_logs_id
+
+def get_critical_logs():
+    """
+    gets critical_logs from config.env
+    rtype: int
+    """
+    critical_logs_id = os.getenv('CRITICAL_LOGS')
+    try:
+        critical_logs_id = int(critical_logs_id)
+    except:
+        critical_logs_id = 0
+    return critical_logs_id
+
+def get_mega_alert_logs():
+    """
+    gets mega_alert_logs from config.env
+    rtype: int
+    """
+    mega_alert_logs_str = os.getenv('MEGA_ALERT_LOGS')
+    try:
+        mega_alert_logs_id = int(mega_alert_logs_id)
+    except:
+        mega_alert_logs_id = None
+    return mega_alert_logs_id
+
+
+    
