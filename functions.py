@@ -119,7 +119,7 @@ def get_general_logs():
     try:
         general_logs_id = int(general_logs_id)
     except:
-        general_logs_id = None
+        general_logs_id = 0
     return general_logs_id
 
 def get_critical_logs():
@@ -143,7 +143,7 @@ def get_mega_alert_logs():
     try:
         mega_alert_logs_id = int(mega_alert_logs_id)
     except:
-        mega_alert_logs_id = None
+        mega_alert_logs_id = 0
     return mega_alert_logs_id
 
 
