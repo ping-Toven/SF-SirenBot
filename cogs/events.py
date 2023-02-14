@@ -115,11 +115,12 @@ class Events(commands.Cog):
             return
 
         """Getting objects."""
-        logging_channel = self.bot.get_channel(get_log_channel()) if get_log_channel() != None else 0
-        
-        if logging_channel == 0:
-            return
+        mega_alert_logs = self.bot.get_channel(get_mega_alert_logs()) if get_mega_alert_logs() != 0 else None
 
+        if mega_alert_logs is None:
+            print('Error in watched_role_created: You haven\'t added a channel ID to MEGA_ALERT_LOGS, have you?\n Add it in config.env ASAP and restart the bot.')
+            return
+    
         """Getting all enabled permissions from role."""
         role_true_permissions = []
         for (permission, value) in role.permissions:
@@ -140,7 +141,7 @@ class Events(commands.Cog):
         # It's a huge pain, so I'll won't be doing it (for now, at least).
         # embed.add_field(name='Created by:', value='')
 
-        await logging_channel.send(embed=embed)
+        await mega_alert_logs.send(embed=embed)
 
     """Need to get role creator, but I don't want to go into Audit Log"""
     @commands.Cog.listener(name='on_guild_role_update')
@@ -149,9 +150,10 @@ class Events(commands.Cog):
             return
 
         """Getting objects."""
-        logging_channel = self.bot.get_channel(get_log_channel()) if get_log_channel() != None else 0
-        
-        if logging_channel == 0:
+        mega_alert_logs = self.bot.get_channel(get_mega_alert_logs()) if get_mega_alert_logs() != 0 else None
+
+        if mega_alert_logs is None:
+            print('Error in watched_role_updated: You haven\'t added a channel ID to MEGA_ALERT_LOGS, have you?\n Add it in config.env ASAP and restart the bot.')
             return
 
         if before.permissions == after.permissions:
@@ -180,7 +182,7 @@ class Events(commands.Cog):
         # It's a huge pain, so I'll won't be doing it (for now, at least).
         # embed.add_field(name='Created by:', value='')
 
-        await logging_channel.send(embed=embed)
+        await mega_alert_logs.send(embed=embed)
 
     """NULCDS, see README.md for more info"""
     @commands.Cog.listener(name='on_member_update')
@@ -188,7 +190,14 @@ class Events(commands.Cog):
         if before.guild.id != get_guild_id():
             return
 
-        logging_channel = self.bot.get_channel(get_log_channel())
+        """Getting objects."""
+        critical_logs = self.bot.get_channel(get_critical_logs()) if get_critical_logs() != 0 else None
+
+        if critical_logs is None:
+            print('Error in watched_roles_given: You haven\'t added a channel ID to CRITICAL_LOGS, have you?\n Add it in config.env ASAP and restart the bot.')
+            return
+        
+
         watched_roles = {before.guild.get_role(get_admin_role()), before.guild.get_role(get_mod_role()), before.guild.get_role(get_team_role())}
     
         """When someone RECEIVES a watched role, it gets logged."""
@@ -199,10 +208,14 @@ class Events(commands.Cog):
             if different_role not in watched_roles:
                 return
 
+            if not critical_logs:
+                print('Error in watched_roles_given: You haven\'t added a channel ID to CRITICAL_LOGS, have you?\n Add it in config.env ASAP.')
+                return
+
             embed = discord.Embed(title='Watched role given', description=f'{different_role.mention} has been given to {after.mention}.', color=self.bot.color, timestamp=discord.utils.utcnow())
             embed.set_author(name=after, icon_url=after.avatar)
             embed.set_footer(text=f'User ID: {after.id}')
-            await logging_channel.send(embed=embed)
+            await critical_logs.send(embed=embed)
         
         
 
