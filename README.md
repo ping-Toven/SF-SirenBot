@@ -47,18 +47,9 @@ Open `config.env` and add channel IDs for your logging channels:
 * Figure out required permissions for bot to function properly.
 * Finish documentation
 
-## 99% Complete
-Make sure to update logging channels depending on the severity of the event:
-* **N**eed
-* **U**pdated
-* **L**ogging
-* **C**hannel
-* **D**epending on
-* **S**everity
-
-### Events
-* New users added to watched roles - *NULCDS*
-* Any bots removed (or this bot itself removed) - *NULCDS*
+## Complete
+* New users added to watched roles
+* Any bots removed (or this bot itself removed)
 
 ## Additional Information
 ### Permissions Required
