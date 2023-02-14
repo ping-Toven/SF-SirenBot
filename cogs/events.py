@@ -20,9 +20,9 @@ class Events(commands.Cog):
             return
 
         """Getting objects."""
-        critical_logs = self.bot.get_channel(get_critical_logs()) if get_critical_logs() != 0 else None
+        mega_alert_logs = self.bot.get_channel(get_mega_alert_logs()) if get_mega_alert_logs() != 0 else None
 
-        if critical_logs is None:
+        if mega_alert_logs is None:
             print('Error in webhook_updates: You haven\'t added a channel ID to CRITICAL_LOGS, have you?\n Add it in config.env ASAP and restart the bot.')
             return
         
@@ -39,7 +39,7 @@ class Events(commands.Cog):
         embed.set_image(url=recent_webhook.display_avatar)
         embed.set_footer(text='Displayed above is the webhook avatar.')
 
-        await critical_logs.send(embed=embed)
+        await mega_alert_logs.send(embed=embed)
 
     @commands.Cog.listener(name='on_guild_leave')
     async def sirenbot_leaves_guild(self, guild):
@@ -66,9 +66,9 @@ class Events(commands.Cog):
             return
 
         """Getting objects."""
-        critical_logs = self.bot.get_channel(get_critical_logs()) if get_critical_logs() != 0 else None
+        mega_alert_logs = self.bot.get_channel(get_mega_alert_logs()) if get_mega_alert_logs() != 0 else None
 
-        if critical_logs is None:
+        if mega_alert_logs is None:
             print('Error in general_locked: You haven\'t added a channel ID to CRITICAL_LOGS, have you?\n Add it in config.env ASAP and restart the bot.')
             return
 
@@ -89,7 +89,7 @@ class Events(commands.Cog):
         """Sending embed to logging channel."""
         embed = discord.Embed(title=f'#{general_chat} has just been locked.', description=f'[Jump!]({general_chat.jump_url})', color=self.bot.color, timestamp=discord.utils.utcnow())
         embed.set_footer(text=f'Guild ID: {before.guild.id}')
-        await critical_logs.send(embed=embed)
+        await mega_alert_logs.send(embed=embed)
 
     """Need to get role creator, but I don't want to go into Audit Log"""
     @commands.Cog.listener(name='on_guild_role_create')
