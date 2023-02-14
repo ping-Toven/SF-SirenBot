@@ -45,7 +45,7 @@ Open `config.env` and add channel IDs for your logging channels:
 
 ### Additional
 * Figure out required permissions for bot to function properly.
-* Finish the 'How to setup' part of this readme
+* Finish documentation
 
 ## 99% Complete
 Make sure to update logging channels depending on the severity of the event:
