@@ -14,6 +14,7 @@ class Events(commands.Cog):
         self.bot = bot
     
     """Need to figure out how to differentiate between webhook being created, updated, or deleted."""
+    # Need to fix bug where it says there's no channel ID in config.env, even though there is
     @commands.Cog.listener(name='on_webhooks_update')
     async def webhook_updates(self, channel):
         if channel.guild.id != get_guild_id():
@@ -23,7 +24,7 @@ class Events(commands.Cog):
         mega_alert_logs = self.bot.get_channel(get_mega_alert_logs()) if get_mega_alert_logs() != 0 else None
 
         if mega_alert_logs is None:
-            print('Error in webhook_updates: You haven\'t added a channel ID to CRITICAL_LOGS, have you?\n Add it in config.env ASAP and restart the bot.')
+            print('Error in webhook_updates: You haven\'t added a channel ID to MEGA_ALERT_LOGS, have you?\n Add it in config.env ASAP and restart the bot.')
             return
         
         """Getting the most recent webhook."""
@@ -59,7 +60,7 @@ class Events(commands.Cog):
         await mega_alert_logs.send(embed=embed)
         pass        
 
-    """Fix bug where embed gets sent when perm is set to TRUE"""
+    """Fix bug where embed gets sent even when perm is set to TRUE"""
     @commands.Cog.listener(name='on_guild_channel_update')
     async def general_locked(self, before, after):
         if before.guild.id != get_guild_id():
@@ -69,11 +70,11 @@ class Events(commands.Cog):
         mega_alert_logs = self.bot.get_channel(get_mega_alert_logs()) if get_mega_alert_logs() != 0 else None
 
         if mega_alert_logs is None:
-            print('Error in general_locked: You haven\'t added a channel ID to CRITICAL_LOGS, have you?\n Add it in config.env ASAP and restart the bot.')
+            print('Error in general_locked: You haven\'t added a channel ID to MEGA_ALERT_LOGS, have you?\n Add it in config.env ASAP and restart the bot.')
             return
 
-        general_chat = self.bot.get_channel(get_gen_chat()) # if get_gen_chat() != None else 0
-        verified_role = before.guild.get_role(get_verified_role()) # if get_verified_role() != None else 0)
+        general_chat = self.bot.get_channel(get_gen_chat())
+        verified_role = before.guild.get_role(get_verified_role())
         everyone_role = before.guild.default_role
 
         """Checking if the channel updated is general_chat."""
