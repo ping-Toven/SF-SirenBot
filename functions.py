@@ -127,7 +127,7 @@ def get_critical_logs():
     gets critical_logs from config.env
     rtype: int
     """
-    critical_logs_id = os.getenv('CRITICAL_LOGS')
+    critical_logs_str = os.getenv('CRITICAL_LOGS')
     try:
         critical_logs_id = int(critical_logs_id)
     except:
