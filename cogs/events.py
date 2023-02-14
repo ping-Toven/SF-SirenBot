@@ -16,10 +16,14 @@ class Events(commands.Cog):
     """Need to figure out how to differentiate between webhook being created, updated, or deleted."""
     @commands.Cog.listener(name='on_webhooks_update')
     async def webhook_updates(self, channel):
+        if channel.guild.id != get_guild_id():
+            return
+
         """Getting objects."""
-        logging_channel = self.bot.get_channel(get_log_channel()) if get_log_channel() != None else 0
-        
-        if logging_channel == 0:
+        critical_logs = self.bot.get_channel(get_critical_logs()) if get_critical_logs() != 0 else None
+
+        if critical_logs is None:
+            print('Error in webhook_updates: You haven\'t added a channel ID to CRITICAL_LOGS, have you?\n Add it in config.env ASAP and restart the bot.')
             return
 
         # Useful links:
@@ -39,59 +43,42 @@ class Events(commands.Cog):
         embed.set_image(url=recent_webhook.display_avatar)
         embed.set_footer(text='Displayed above is the webhook avatar.')
 
-        await logging_channel.send(embed=embed)
+        await critical_logs.send(embed=embed)
 
-    """NULCDS, see README.md for more info"""
     @commands.Cog.listener(name='on_guild_leave')
     async def sirenbot_leaves_guild(self, guild):
-        """Getting objects."""
-        logging_channel = self.bot.get_channel(get_log_channel()) if get_log_channel() != None else 0
-        # guild_from_db = self.bot.get_guild(get_guild_id()) # if get_guild_id() != None else 0
-        
-        if logging_channel == 0:
+        if guild.id != get_guild_id():
             return
 
-        # Commented out because Toven said all but logging_channel will be hardcoded in.
-        # if guild_from_db == 0:
-        #    embed = discord.Embed(title=self.bot.swr, description=f'There is no guild defined in config.', color=self.bot.color)
-        #
-        #    # Replace with a defined error channel. Waiting for toven to add to db.
-        #    await logging_channel.send(embed=embed)
-        #    return
+        """Getting objects."""
+        mega_alert_logs = self.bot.get_channel(get_mega_alert_logs()) if get_mega_alert_logs() != 0 else None
+
+        if mega_alert_logs is None:
+            print('Error in sirenbot_leaves_guild: You haven\'t added a channel ID to MEGA_ALERT_LOGS, have you?\n Add it in config.env ASAP and restart the bot.')
+            return
 
         """Sending embed to logging channel."""
         embed = discord.Embed(title=f'Bot Left {guild.name}', description=f'{self.bot.user.mention} has just left {guild.name}.', color=self.bot.color, timestamp=discord.utils.utcnow())
 
-        await logging_channel.send(embed=embed)
+        await mega_alert_logs.send(embed=embed)
         pass        
 
     """Fix bug where embed gets sent when perm is set to TRUE"""
     @commands.Cog.listener(name='on_guild_channel_update')
     async def general_locked(self, before, after):
+        if before.guild.id != get_guild_id():
+            return
+
         """Getting objects."""
-        logging_channel = self.bot.get_channel(get_log_channel()) if get_log_channel() != None else 0
-        
-        if logging_channel == 0:
+        critical_logs = self.bot.get_channel(get_critical_logs()) if get_critical_logs() != 0 else None
+
+        if critical_logs is None:
+            print('Error in general_locked: You haven\'t added a channel ID to CRITICAL_LOGS, have you?\n Add it in config.env ASAP and restart the bot.')
             return
 
         general_chat = self.bot.get_channel(get_gen_chat()) # if get_gen_chat() != None else 0
         verified_role = before.guild.get_role(get_verified_role()) # if get_verified_role() != None else 0)
         everyone_role = before.guild.default_role
-
-        # Commented out because Toven said all but logging_channel will be hardcoded in.
-        # if general_chat == 0:
-        #    embed = discord.Embed(self.bot.swr, description='There is no general chat defined in config.', color=self.bot.color)
-        #    
-        #    # Replace with a defined error channel. Waiting for toven to add to db.
-        #    await logging_channel.send(embed=embed)
-        #    return
-        
-        # if verified_role == 0:
-        #    embed = discord.Embed(title=self.bot.swr, description='There is no verified role defined in config.', color=self.bot.color)
-        #
-        #    # Replace with a defined error channel. Waiting for toven to add to db.
-        #    await logging_channel.send(embed=embed)
-        #    return
 
         """Checking if the channel updated is general_chat."""
         if before.id != general_chat.id:
@@ -106,7 +93,7 @@ class Events(commands.Cog):
         """Sending embed to logging channel."""
         embed = discord.Embed(title=f'#{general_chat} has just been locked.', description=f'[Jump!]({general_chat.jump_url})', color=self.bot.color, timestamp=discord.utils.utcnow())
         embed.set_footer(text=f'Guild ID: {before.guild.id}')
-        await logging_channel.send(embed=embed)
+        await critical_logs.send(embed=embed)
 
     """Need to get role creator, but I don't want to go into Audit Log"""
     @commands.Cog.listener(name='on_guild_role_create')
@@ -184,7 +171,6 @@ class Events(commands.Cog):
 
         await mega_alert_logs.send(embed=embed)
 
-    """NULCDS, see README.md for more info"""
     @commands.Cog.listener(name='on_member_update')
     async def watched_roles_given(self, before, after):
         if before.guild.id != get_guild_id():
@@ -196,7 +182,6 @@ class Events(commands.Cog):
         if critical_logs is None:
             print('Error in watched_roles_given: You haven\'t added a channel ID to CRITICAL_LOGS, have you?\n Add it in config.env ASAP and restart the bot.')
             return
-        
 
         watched_roles = {before.guild.get_role(get_admin_role()), before.guild.get_role(get_mod_role()), before.guild.get_role(get_team_role())}
     
