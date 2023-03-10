@@ -1,5 +1,5 @@
 """
-SF SirenBot by Jon_HQ, Toven, KaoSxEclipse, aaPattles, Alexander, & Bopped
+SF SirenBot by Jon_HQ, Toven, KaoSxEclipse, Pattles, Alexander, & Bopped
 """
 
 DB_PATH = 'SF-SirenBot/sirenDB.db'
