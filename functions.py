@@ -117,7 +117,7 @@ def get_general_logs():
     """
     general_logs_str = os.getenv('GENERAL_LOGS')
     try:
-        general_logs_id = int(general_logs_id)
+        general_logs_id = int(general_logs_str)
     except:
         general_logs_id = 0
     return general_logs_id
@@ -129,10 +129,11 @@ def get_critical_logs():
     """
     critical_logs_str = os.getenv('CRITICAL_LOGS')
     try:
-        critical_logs_id = int(critical_logs_id)
+        critical_logs_id = int(critical_logs_str)
     except:
         critical_logs_id = 0
     return critical_logs_id
+
 
 def get_mega_alert_logs():
     """
@@ -141,10 +142,26 @@ def get_mega_alert_logs():
     """
     mega_alert_logs_str = os.getenv('MEGA_ALERT_LOGS')
     try:
-        mega_alert_logs_id = int(mega_alert_logs_id)
+        mega_alert_logs_id = int(mega_alert_logs_str)
     except:
         mega_alert_logs_id = 0
     return mega_alert_logs_id
 
 
+""""""
+def update_webhook_tokens_json(name, webhook_token):
+    """
+    changes a token in webhook_tokens.json
+    rtype: bool
+    """
+
+    with open('SF-SirenBot/webhook_tokens.json', encoding='utf-8') as infile:
+        obj = json.load(infile)
+
+    obj[str(name)] = str(webhook_token)
     
+    with open('SF-SirenBot/webhook_tokens.json', 'w') as outfile:
+        json.dump(obj, outfile, ensure_ascii=True, indent=4)
+
+    return True
+
