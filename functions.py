@@ -1,6 +1,7 @@
 import discord
 import sqlite3
 from SirenBot import *
+from typing import Literal
 from dotenv import load_dotenv
 
 load_dotenv('SF-SirenBot/config.env') 
@@ -148,20 +149,30 @@ def get_mega_alert_logs():
     return mega_alert_logs_id
 
 
-""""""
-def update_webhook_tokens_json(name, webhook_token):
+"""JSON"""
+def load_json(filename):
+    """
+    Loads a json file, wow
+    """
+    with open(filename, encoding='utf-8') as infile:
+        return json.load(infile)
+
+def update_webhook_tokens_json(name:Literal['mega_alerts', 'critical', 'general'], webhook_token):
     """
     changes a token in webhook_tokens.json
     rtype: bool
     """
 
-    with open('SF-SirenBot/webhook_tokens.json', encoding='utf-8') as infile:
-        obj = json.load(infile)
+    try: 
+        with open('SF-SirenBot/webhook_tokens.json', encoding='utf-8') as infile:
+            obj = json.load(infile)
 
-    obj[str(name)] = str(webhook_token)
-    
-    with open('SF-SirenBot/webhook_tokens.json', 'w') as outfile:
-        json.dump(obj, outfile, ensure_ascii=True, indent=4)
-
-    return True
+        obj[str(name)] = str(webhook_token)
+        
+        with open('SF-SirenBot/webhook_tokens.json', 'w') as outfile:
+            json.dump(obj, outfile, ensure_ascii=True, indent=4)
+        return True
+    except Exception as e:
+        print(e)
+        return False
 
