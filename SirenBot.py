@@ -50,6 +50,7 @@ class SirenBot(commands.Bot):
         self.optional = '`[] - optional`\n'
         self.foobar = '`foo/bar – choose either \'foo\' or \'bar\'`\n'
         self.ratelimited = 'Please wait a few minutes and try again.'
+        self.no_logs = 'One or more of your desired log channels don\'t have a channel. Please set them up in config.env and restart the bot.'
 
 
     async def setup_hook(self):
