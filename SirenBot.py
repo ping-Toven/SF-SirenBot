@@ -14,6 +14,7 @@ import sqlite3
 import sys
 import traceback
 from datetime import datetime, timezone
+import aiohttp
 
 import discord
 from discord.ext import commands
@@ -32,7 +33,15 @@ INITIAL_EXTENSIONS = [
   
 class SirenBot(commands.Bot):
     def __init__(self):
-        super().__init__(help_command=MyHelp(command_attrs={'aliases':['h'], 'description':'Displays a list of all available commands. Text command only.'}), command_prefix=commands.when_mentioned_or(PREFIX), intents=discord.Intents.all(), case_insensitive=True, activity=discord.Activity(type=discord.ActivityType.watching, name=f'ServerForge'))
+        super().__init__(
+            help_command=MyHelp(command_attrs={'aliases':['h'], 'description':'Displays a list of all available commands. Text command only.'}), 
+            command_prefix=commands.when_mentioned_or(PREFIX), 
+            intents=discord.Intents.all(), 
+            case_insensitive=True, 
+            activity=discord.Activity(type=discord.ActivityType.watching, name=f'over this server'), 
+            session = aiohttp.ClientSession()
+            )
+        
         self.token = os.getenv('TOKEN')
 
         """Important information"""
@@ -51,7 +60,6 @@ class SirenBot(commands.Bot):
         self.foobar = '`foo/bar – choose either \'foo\' or \'bar\'`\n'
         self.ratelimited = 'Please wait a few minutes and try again.'
         self.no_logs = 'One or more of your desired log channels don\'t have a channel. Please set them up in config.env and restart the bot.'
-
 
     async def setup_hook(self):
         for extension in INITIAL_EXTENSIONS:
@@ -235,6 +243,8 @@ class Help(commands.Cog):
 
 
 
+
 if __name__ == '__main__':
     SirenBot = SirenBot()
     SirenBot.run()
+    

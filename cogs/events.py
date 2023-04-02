@@ -1,5 +1,6 @@
 import datetime
 from datetime import datetime, timezone
+import aiohttp
 
 import discord
 from discord import app_commands
@@ -13,7 +14,7 @@ class Events(commands.Cog):
     def __init__(self, bot:SirenBot):
         self.bot = bot
     
-    """Need to figure out how to differentiate between webhook being created, updated, or deleted."""
+    # Need to figure out how to differentiate between webhook being created, updated, or deleted."""
     # Need to fix bug where it says there's no channel ID in config.env, even though there is
     @commands.Cog.listener(name='on_webhooks_update')
     async def webhook_updates(self, channel):
@@ -48,7 +49,7 @@ class Events(commands.Cog):
             return
 
         """Getting objects."""
-        mega_alert_logs = self.bot.get_channel(get_mega_alert_logs()) if get_mega_alert_logs() != 0 else None
+        mega_alert_logs = discord.Webhook.from_url(url=get_webhook_url('mega_alerts'), session=aiohttp.ClientSession)
 
         if mega_alert_logs is None:
             print('Error in sirenbot_leaves_guild: You haven\'t added a channel ID to MEGA_ALERT_LOGS, have you?\n Add it in config.env ASAP and restart the bot.')
