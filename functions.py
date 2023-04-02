@@ -148,6 +148,18 @@ def get_mega_alert_logs():
         mega_alert_logs_id = 0
     return mega_alert_logs_id
 
+def get_bot_owner():
+    """
+    gets bot_owner from config.env
+    rtype: int
+    """
+    bot_owner_str = os.getenv('BOT_OWNER')
+    try:
+        bot_owner_id = int(bot_owner_str)
+    except:
+        bot_owner_id = 0
+    return bot_owner_id
+
 
 """JSON"""
 def load_json(filename):
@@ -157,7 +169,7 @@ def load_json(filename):
     with open(filename, encoding='utf-8') as infile:
         return json.load(infile)
 
-def update_webhook_tokens_json(name:Literal['mega_alerts', 'critical', 'general'], webhook_token):
+def update_webhook_tokens_json(name:Literal['mega_alerts', 'critical', 'general'], webhook_token_url):
     """
     changes a token in webhook_tokens.json
     rtype: bool
@@ -167,7 +179,7 @@ def update_webhook_tokens_json(name:Literal['mega_alerts', 'critical', 'general'
         with open('SF-SirenBot/webhook_tokens.json', encoding='utf-8') as infile:
             obj = json.load(infile)
 
-        obj[str(name)] = str(webhook_token)
+        obj[str(name)] = str(webhook_token_url)
         
         with open('SF-SirenBot/webhook_tokens.json', 'w') as outfile:
             json.dump(obj, outfile, ensure_ascii=True, indent=4)

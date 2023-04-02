@@ -58,4 +58,5 @@ Open `config.env` and add channel IDs for your logging channels:
 * Send Messages
 * Read Message History
 * Manage Channels *(for webhook events)*
-* Embed Links 
+* Embed Links
+* Manage Webhooks *(for setup cmd)*
