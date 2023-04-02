@@ -188,3 +188,24 @@ def update_webhook_tokens_json(name:Literal['mega_alerts', 'critical', 'general'
         print(e)
         return False
 
+def get_webhook_url(name:Literal['mega_alerts', 'critical', 'general']):
+    """
+    gets a webhook url
+    rtype: str
+    """
+    try: 
+        with open('SF-SirenBot/webhook_tokens.json', encoding='utf-8') as infile:
+            f = json.load(infile)
+
+        obj = None
+        if name == 'mega_alerts':
+            obj = f['mega_alerts']
+        if name == 'critical':
+            obj = f['critical']
+        if name == 'general':
+            obj = f['general']
+            
+        return obj
+    except Exception as e:
+        print(e)
+        return None
