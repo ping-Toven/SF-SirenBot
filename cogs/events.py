@@ -46,13 +46,18 @@ class Events(commands.Cog):
     # Complete, need QA
     @commands.Cog.listener(name='on_guild_leave')
     async def sirenbot_leaves_guild(self, guild):
+        """
+        If the bot leaves the guild, 
+        Mega alert gets sent.
+        """
+
         if guild.id != get_guild_id():
             return
 
         embed = discord.Embed(title=f'Bot Left {guild.name}', description=f'{self.bot.user.mention} has just left {guild.name}.', color=self.bot.color, timestamp=discord.utils.utcnow())
         await send_webhook_embed('mega_alerts', embed)
 
-    """Fix bug where embed gets sent even when perm is set to TRUE"""
+    # Fix bug where embed gets sent even when perm is set to TRUE
     @commands.Cog.listener(name='on_guild_channel_update')
     async def general_locked(self, before, after):
         if before.guild.id != get_guild_id():
@@ -84,7 +89,7 @@ class Events(commands.Cog):
         embed.set_footer(text=f'Guild ID: {before.guild.id}')
         await mega_alert_logs.send(embed=embed)
 
-    """Need to get role creator, but I don't want to go into Audit Log"""
+    # Need to get role creator, but I don't want to go into Audit Log
     @commands.Cog.listener(name='on_guild_role_create')
     async def watched_role_created(self, role):
         if role.guild.id != get_guild_id():
@@ -119,17 +124,15 @@ class Events(commands.Cog):
 
         await mega_alert_logs.send(embed=embed)
 
-    """Need to get role creator, but I don't want to go into Audit Log"""
+    # Complete, need QA
     @commands.Cog.listener(name='on_guild_role_update')
     async def watched_role_updated(self, before, after):
+        """
+        If any of the watched roles (admin, moderator, team) are changed (given/taken permissions),
+        Critical alert gets sent.
+        """
+
         if before.guild.id != get_guild_id():
-            return
-
-        """Getting objects."""
-        mega_alert_logs = self.bot.get_channel(get_mega_alert_logs()) if get_mega_alert_logs() != 0 else None
-
-        if mega_alert_logs is None:
-            print('Error in watched_role_updated: You haven\'t added a channel ID to MEGA_ALERT_LOGS, have you?\n Add it in config.env ASAP and restart the bot.')
             return
 
         if before.permissions == after.permissions:
@@ -151,18 +154,22 @@ class Events(commands.Cog):
         if len(role_scary_permissions) == 0:
             return
 
-        embed = discord.Embed(title='Scary role created', description=f'`{after.name}` has just been given `{len(role_scary_permissions)}` scary permission{"s" if len(role_scary_permissions) != 1 else ""}.', color=self.bot.color, timestamp=discord.utils.utcnow())
+        embed = discord.Embed(title='Watched role updated', description=f'`{after.name}` has just been given `{len(role_scary_permissions)}` scary permission{"s" if len(role_scary_permissions) != 1 else ""}.', color=self.bot.color, timestamp=discord.utils.utcnow())
         embed.add_field(name='Permissions:', value='\n'.join(role_scary_permissions))
+
+        async for entry in before.guild.audit_logs(action=discord.AuditLogAction.role_update, limit=1):
+            embed.add_field(name='Updated by:', value=f'{entry.user.mention}\n{entry.user}\n{entry.user.id}')
         
-        # Need to go into the Audit Log to check who created a role.
-        # It's a huge pain, so I'll won't be doing it (for now, at least).
-        # embed.add_field(name='Created by:', value='')
+        await send_webhook_embed('mega_alerts', embed)
 
-        await mega_alert_logs.send(embed=embed)
-
-    # Complete
+    # Complete, need QA
     @commands.Cog.listener(name='on_member_update')
     async def watched_roles_given(self, before, after):
+        """
+        If any of the watched roles (admin, moderator, team) are given,
+        Critical alert gets sent.
+        """
+
         if before.guild.id != get_guild_id():
             return
 
