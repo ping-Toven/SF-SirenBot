@@ -89,17 +89,15 @@ class Events(commands.Cog):
         embed.set_footer(text=f'Guild ID: {before.guild.id}')
         await mega_alert_logs.send(embed=embed)
 
-    # Need to get role creator, but I don't want to go into Audit Log
+    # Complete, need QA
     @commands.Cog.listener(name='on_guild_role_create')
-    async def watched_role_created(self, role):
+    async def scary_role_created(self, role):
+        """
+        If any role is created with scary permissions,
+        Mega alert gets sent.
+        """
+
         if role.guild.id != get_guild_id():
-            return
-
-        """Getting objects."""
-        mega_alert_logs = self.bot.get_channel(get_mega_alert_logs()) if get_mega_alert_logs() != 0 else None
-
-        if mega_alert_logs is None:
-            print('Error in watched_role_created: You haven\'t added a channel ID to MEGA_ALERT_LOGS, have you?\n Add it in config.env ASAP and restart the bot.')
             return
     
         """Getting all enabled permissions from role."""
@@ -115,20 +113,22 @@ class Events(commands.Cog):
                 temp = permission.replace('_', ' ')
                 role_scary_permissions.append(temp.title())
 
+        if len(role_scary_permissions) == 0:
+            return
+
         embed = discord.Embed(title='Scary role created', description=f'`{role.name}` has just been created with `{len(role_scary_permissions)}` scary permission{"s" if len(role_scary_permissions) != 1 else ""}.', color=self.bot.color, timestamp=discord.utils.utcnow())
         embed.add_field(name='Permissions:', value='\n'.join(role_scary_permissions))
         
-        # Need to go into the Audit Log to check who created a role.
-        # It's a huge pain, so I'll won't be doing it (for now, at least).
-        # embed.add_field(name='Created by:', value='')
+        async for entry in role.guild.audit_logs(action=discord.AuditLogAction.role_create, limit=1):
+            embed.add_field(name='Created by:', value=f'{entry.user.mention}\n{entry.user}\n{entry.user.id}')
 
-        await mega_alert_logs.send(embed=embed)
+        await send_webhook_embed('mega_alerts', embed)
 
     # Complete, need QA
     @commands.Cog.listener(name='on_guild_role_update')
-    async def watched_role_updated(self, before, after):
+    async def scary_role_updated(self, before, after):
         """
-        If any of the watched roles (admin, moderator, team) are changed (given/taken permissions),
+        If any role is given scary permissions,
         Critical alert gets sent.
         """
 
@@ -154,7 +154,7 @@ class Events(commands.Cog):
         if len(role_scary_permissions) == 0:
             return
 
-        embed = discord.Embed(title='Watched role updated', description=f'`{after.name}` has just been given `{len(role_scary_permissions)}` scary permission{"s" if len(role_scary_permissions) != 1 else ""}.', color=self.bot.color, timestamp=discord.utils.utcnow())
+        embed = discord.Embed(title='Scary role updated', description=f'`{after.name}` ({after.mention}) has just been given `{len(role_scary_permissions)}` scary permission{"s" if len(role_scary_permissions) != 1 else ""}.', color=self.bot.color, timestamp=discord.utils.utcnow())
         embed.add_field(name='Permissions:', value='\n'.join(role_scary_permissions))
 
         async for entry in before.guild.audit_logs(action=discord.AuditLogAction.role_update, limit=1):
