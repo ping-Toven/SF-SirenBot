@@ -38,8 +38,6 @@ class SirenBot(commands.Bot):
             command_prefix=commands.when_mentioned_or(PREFIX), 
             intents=discord.Intents.all(), 
             case_insensitive=True, 
-            activity=discord.Activity(type=discord.ActivityType.watching, name=f'over this server'), 
-            session = aiohttp.ClientSession()
             )
         
         self.token = os.getenv('TOKEN')
@@ -240,9 +238,6 @@ class Help(commands.Cog):
     async def cog_unload(self) -> None:
         assert self.bot._original_help_command is not None
         self.bot.help_command = self.bot._original_help_command
-
-
-
 
 if __name__ == '__main__':
     SirenBot = SirenBot()
