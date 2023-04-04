@@ -48,18 +48,8 @@ class Events(commands.Cog):
         if guild.id != get_guild_id():
             return
 
-        """Getting objects."""
-        mega_alert_logs = discord.Webhook.from_url(url=get_webhook_url('mega_alerts'), session=aiohttp.ClientSession)
-
-        if mega_alert_logs is None:
-            print('Error in sirenbot_leaves_guild: You haven\'t added a channel ID to MEGA_ALERT_LOGS, have you?\n Add it in config.env ASAP and restart the bot.')
-            return
-
-        """Sending embed to logging channel."""
         embed = discord.Embed(title=f'Bot Left {guild.name}', description=f'{self.bot.user.mention} has just left {guild.name}.', color=self.bot.color, timestamp=discord.utils.utcnow())
-
-        await mega_alert_logs.send(embed=embed)
-        pass        
+        await send_webhook_embed('mega_alerts', embed)
 
     """Fix bug where embed gets sent even when perm is set to TRUE"""
     @commands.Cog.listener(name='on_guild_channel_update')
