@@ -113,7 +113,7 @@ def get_log_channel():
 """config.env FUNCTIONS"""
 def get_general_logs():
     """
-    gets general_logs from config.env
+    Gets general_logs from config.env
     rtype: int
     """
     general_logs_str = os.getenv('GENERAL_LOGS')
@@ -125,7 +125,7 @@ def get_general_logs():
 
 def get_critical_logs():
     """
-    gets critical_logs from config.env
+    Gets critical_logs from config.env
     rtype: int
     """
     critical_logs_str = os.getenv('CRITICAL_LOGS')
@@ -138,7 +138,7 @@ def get_critical_logs():
 
 def get_mega_alert_logs():
     """
-    gets mega_alert_logs from config.env
+    Gets mega_alert_logs from config.env
     rtype: int
     """
     mega_alert_logs_str = os.getenv('MEGA_ALERT_LOGS')
@@ -150,7 +150,7 @@ def get_mega_alert_logs():
 
 def get_bot_owner():
     """
-    gets bot_owner from config.env
+    Gets bot_owner from config.env
     rtype: int
     """
     bot_owner_str = os.getenv('BOT_OWNER')
@@ -171,7 +171,7 @@ def load_json(filename):
 
 def update_webhook_tokens_json(name:Literal['mega_alerts', 'critical', 'general'], webhook_token_url):
     """
-    changes a token in webhook_tokens.json
+    Changes a token in webhook_tokens.json
     rtype: bool
     """
 
@@ -188,24 +188,32 @@ def update_webhook_tokens_json(name:Literal['mega_alerts', 'critical', 'general'
         print(e)
         return False
 
-def get_webhook_url(name:Literal['mega_alerts', 'critical', 'general']):
+async def send_webhook_embed(name:Literal['mega_alerts', 'critical', 'general'], embed_obj):
     """
-    gets a webhook url
-    rtype: str
+    Sends an embed through a webhook of choice.
+    rtype: bool
     """
     try: 
         with open('SF-SirenBot/webhook_tokens.json', encoding='utf-8') as infile:
             f = json.load(infile)
 
-        obj = None
+        webhook_url = None
         if name == 'mega_alerts':
-            obj = f['mega_alerts']
+            webhook_url = f['mega_alerts']
         if name == 'critical':
-            obj = f['critical']
+            webhook_url = f['critical']
         if name == 'general':
-            obj = f['general']
+            webhook_url = f['general']
+
+        async with aiohttp.ClientSession() as session:
+            webhook = discord.Webhook.from_url(url=webhook_url, session=session)
+            await webhook.send(embed=embed_obj)
+            await session.close()
+
+        return True
             
-        return obj
     except Exception as e:
         print(e)
-        return None
+        return False
+    
+    
