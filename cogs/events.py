@@ -43,6 +43,7 @@ class Events(commands.Cog):
 
         await mega_alert_logs.send(embed=embed)
 
+    # Complete, need QA
     @commands.Cog.listener(name='on_guild_leave')
     async def sirenbot_leaves_guild(self, guild):
         if guild.id != get_guild_id():
@@ -159,16 +160,10 @@ class Events(commands.Cog):
 
         await mega_alert_logs.send(embed=embed)
 
+    # Complete
     @commands.Cog.listener(name='on_member_update')
     async def watched_roles_given(self, before, after):
         if before.guild.id != get_guild_id():
-            return
-
-        """Getting objects."""
-        critical_logs = self.bot.get_channel(get_critical_logs()) if get_critical_logs() != 0 else None
-
-        if critical_logs is None:
-            print('Error in watched_roles_given: You haven\'t added a channel ID to CRITICAL_LOGS, have you?\n Add it in config.env ASAP and restart the bot.')
             return
 
         watched_roles = {before.guild.get_role(get_admin_role()), before.guild.get_role(get_mod_role()), before.guild.get_role(get_team_role())}
@@ -181,14 +176,10 @@ class Events(commands.Cog):
             if different_role not in watched_roles:
                 return
 
-            if not critical_logs:
-                print('Error in watched_roles_given: You haven\'t added a channel ID to CRITICAL_LOGS, have you?\n Add it in config.env ASAP.')
-                return
-
             embed = discord.Embed(title='Watched role given', description=f'{different_role.mention} has been given to {after.mention}.', color=self.bot.color, timestamp=discord.utils.utcnow())
             embed.set_author(name=after, icon_url=after.avatar)
             embed.set_footer(text=f'User ID: {after.id}')
-            await critical_logs.send(embed=embed)
+            await send_webhook_embed('critical', embed)
         
         
 
