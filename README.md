@@ -3,10 +3,6 @@ ServerForge's OSS SirenBot. Monitor dangerous changes in your communities and be
 
 To visit the SirenBot documentation, click [here](https://sirenbot.gitbook.io/sirenbot-documentation/).
 
-# How to Setup
-Open `config.env` and add channel IDs for your logging channels:
-* Need logging channel names
-
 # To Do List
 ## Incomplete:
 ### Events
@@ -25,16 +21,10 @@ Open `config.env` and add channel IDs for your logging channels:
 
 *X emoji means offline. Red square means DND mode. Green means online. Orange means idle. Purple means online (any status) any % of time but not online more than 50% of the hour.*
 
-### Additional
-* Help menu
-* Fix the issue where the `help` command falls under 'No Category' in the help menu. I (Pattles) have just added a janky fix for the time being, visible in SirenBot.py
-
 ## In progress
 ### Events
 * New webhooks created - *Need to figure out how to differentiate between webhook being created, updated, or deleted.*
 * Watch general chat to see if it gets locked. (Send messages or view channel disabled for verified role or @everyone) - *Needs perms check for neutral*
-* Any role being CREATED WITH: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server` perms. - *Need to get role creator, thru Audit Log :pepesad:*
-* Any role being UPDATED TO INCLUDE: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server` perms. - *Need to get role creator, thru Audit Log :pepesad:*
 
 ### Commands
 * /register modrole role:@role - *need example code to add IDs to db to complete*
@@ -48,8 +38,12 @@ Open `config.env` and add channel IDs for your logging channels:
 * Finish documentation
 
 ## Complete
-* New users added to watched roles
 * Any bots removed (or this bot itself removed)
+* New users added to watched roles
+* Any role being UPDATED TO INCLUDE: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server` perms.
+* Any role being CREATED WITH: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server` perms.
+
+* Help menu
 
 ## Additional Information
 ### Permissions Required
