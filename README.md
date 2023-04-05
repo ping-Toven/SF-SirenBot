@@ -23,7 +23,6 @@ To visit the SirenBot documentation, click [here](https://sirenbot.gitbook.io/si
 
 ## In progress
 ### Events
-* New webhooks created - *Need to figure out how to differentiate between webhook being created, updated, or deleted.*
 * Watch general chat to see if it gets locked. (Send messages or view channel disabled for verified role or @everyone) - *Needs perms check for neutral*
 
 ### Commands
@@ -42,6 +41,7 @@ To visit the SirenBot documentation, click [here](https://sirenbot.gitbook.io/si
 * New users added to watched roles
 * Any role being UPDATED TO INCLUDE: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server` perms.
 * Any role being CREATED WITH: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server` perms.
+* New webhooks created
 
 * Help menu
 

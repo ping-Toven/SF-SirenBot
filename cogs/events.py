@@ -1,5 +1,5 @@
 import datetime
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import aiohttp
 
 import discord
@@ -14,34 +14,85 @@ class Events(commands.Cog):
     def __init__(self, bot:SirenBot):
         self.bot = bot
     
-    # Need to figure out how to differentiate between webhook being created, updated, or deleted."""
-    # Need to fix bug where it says there's no channel ID in config.env, even though there is
+    # Complete, need QA
     @commands.Cog.listener(name='on_webhooks_update')
     async def webhook_updates(self, channel):
+        """
+        If a webhook gets created, modified, or deleted,
+        Mega alert gets sent.
+        """
+
         if channel.guild.id != get_guild_id():
             return
+                
+        time_ago = discord.utils.utcnow() - timedelta(seconds=50)
+        webhook_create, webhook_delete, webhook_update = [], [], []
 
-        """Getting objects."""
-        mega_alert_logs = self.bot.get_channel(get_mega_alert_logs()) if get_mega_alert_logs() != 0 else None
+        async for entry in channel.guild.audit_logs(action=discord.AuditLogAction.webhook_create, limit=1, after=time_ago):
+            webhook_create.append(entry)
 
-        if mega_alert_logs is None:
-            print('Error in webhook_updates: You haven\'t added a channel ID to MEGA_ALERT_LOGS, have you?\n Add it in config.env ASAP and restart the bot.')
-            return
-        
-        """Getting the most recent webhook."""
-        webhooks = await channel.webhooks()
-        recent_webhook = sorted(webhooks, key=lambda x: x.created_at, reverse=True)[0]
+        async for entry in channel.guild.audit_logs(action=discord.AuditLogAction.webhook_delete, limit=1, after=time_ago):
+            webhook_delete.append(entry)
 
-        """Sending embed to the logging channel."""
-        embed = discord.Embed(title='Webhook updated', description=f'A webhook has been updated in {channel.mention}.', color=self.bot.color, timestamp=discord.utils.utcnow())
-        embed.add_field(name='Webhook Author:', value=
-            recent_webhook.user.mention + '\n' + recent_webhook.user.name + '\n' + str(recent_webhook.user.id)
-            )
-        embed.add_field(name='Webhook Name:', value=recent_webhook.name)
-        embed.set_image(url=recent_webhook.display_avatar)
-        embed.set_footer(text='Displayed above is the webhook avatar.')
+        async for entry in channel.guild.audit_logs(action=discord.AuditLogAction.webhook_update, limit=1, after=time_ago):
+            webhook_update.append(entry)
 
-        await mega_alert_logs.send(embed=embed)
+        # Need to update.
+        if webhook_create != []:
+            entry = webhook_create[0]
+
+            for webhook in await channel.guild.webhooks():
+                if webhook.id == entry.target.id:
+                    webhook_obj = webhook
+                    break
+
+            embed = discord.Embed(title='Webhook created', description=f'A webhook has been created in {webhook_obj.channel.mention}.', color=self.bot.color)
+            embed.add_field(name='Created by:', value=f'{entry.user.mention}\n{entry.user}\n{entry.user.id}')
+            embed.add_field(name='Webhook Name:', value='`{}`'.format(webhook_obj.name))
+            embed.set_image(url=webhook_obj.display_avatar)
+            
+            embed.set_footer(text='Displayed above is the webhook avatar.')
+            await send_webhook_embed('mega_alerts', embed)
+            
+        # Complete, need QA
+        if webhook_delete != []:
+            entry = webhook_delete[0]
+
+            embed = discord.Embed(title='Webhook deleted', description=f'A webhook has been deleted.', color=self.bot.color)
+            embed.add_field(name='Deleted by:', value=f'{entry.user.mention}\n{entry.user}\n{entry.user.id}')
+            embed.add_field(name='Webhook Name:', value=entry.before.name)
+            embed.set_image(url=entry.before.avatar)
+
+            embed.set_footer(text='Displayed above is the webhook avatar.')
+            await send_webhook_embed('mega_alerts', embed)
+            
+        # Complete, need QA
+        if webhook_update != []:
+            entry = webhook_update[0]
+
+            for webhook in await channel.guild.webhooks():
+                if webhook.id == entry.target.id:
+                    webhook_obj = webhook
+                    break
+    
+            embed = discord.Embed(title='Webhook updated', description=f'A webhook has been updated in {webhook_obj.channel.mention}.', color=self.bot.color)
+            embed.add_field(name='Updated by:', value=f'{entry.user.mention}\n{entry.user}\n{entry.user.id}')
+            
+            """Checking if the webhook name was updated"""
+            desc_name = None
+            try:
+                desc_name = f'**Before:** `{entry.before.name}`\n' \
+                    + f'**After:** `{entry.after.name}`'
+            except AttributeError:
+                desc_name = '`{}`'.format(webhook_obj.name)
+
+            embed.add_field(name='Webhook Name:', value=desc_name)
+
+            """Everything else"""
+            embed.set_image(url=webhook_obj.display_avatar)
+
+            embed.set_footer(text='Displayed above is the webhook avatar.')
+            await send_webhook_embed('mega_alerts', embed)
 
     # Complete, need QA
     @commands.Cog.listener(name='on_guild_leave')
