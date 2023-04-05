@@ -37,12 +37,14 @@ To visit the SirenBot documentation, click [here](https://sirenbot.gitbook.io/si
 * Finish documentation
 
 ## Complete
+### Events
 * Any bots removed (or this bot itself removed)
 * New users added to watched roles
 * Any role being UPDATED TO INCLUDE: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server` perms.
 * Any role being CREATED WITH: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server` perms.
 * New webhooks created
 
+### Additional
 * Help menu
 
 ## Additional Information
