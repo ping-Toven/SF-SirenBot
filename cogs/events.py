@@ -108,37 +108,41 @@ class Events(commands.Cog):
         embed = discord.Embed(title=f'Bot Left {guild.name}', description=f'{self.bot.user.mention} has just left {guild.name}.', color=self.bot.color, timestamp=discord.utils.utcnow())
         await send_webhook_embed('mega_alerts', embed)
 
-    # Fix bug where embed gets sent even when perm is set to TRUE
+    # Complete, need QA
     @commands.Cog.listener(name='on_guild_channel_update')
     async def general_locked(self, before, after):
+        """
+        If @everyone or @verified loses send_messages or view_channel permissions in #general,
+        Mega alert gets sent.
+        """
+        
         if before.guild.id != get_guild_id():
             return
-
-        """Getting objects."""
-        mega_alert_logs = self.bot.get_channel(get_mega_alert_logs()) if get_mega_alert_logs() != 0 else None
-
-        if mega_alert_logs is None:
-            print('Error in general_locked: You haven\'t added a channel ID to MEGA_ALERT_LOGS, have you?\n Add it in config.env ASAP and restart the bot.')
-            return
-
+        
         general_chat = self.bot.get_channel(get_gen_chat())
         verified_role = before.guild.get_role(get_verified_role())
-        everyone_role = before.guild.default_role
 
         """Checking if the channel updated is general_chat."""
         if before.id != general_chat.id:
             return
+                
+        """Checks if general_chat is locked."""        
+        everyone_perms_dict = dict(general_chat.overwrites.get(before.guild.default_role))
+        verified_perms_dict = dict(general_chat.overwrites.get(verified_role))
 
-        """Checks general_chat is locked."""
-        # Need to add a check for if permission is set to neutral.
-        permissions_check = [after.permissions_for(verified_role).view_channel, after.permissions_for(verified_role).send_messages, after.permissions_for(everyone_role).view_channel, after.permissions_for(everyone_role).send_messages]
-        if all(permissions_check):
+        check_perms = [everyone_perms_dict.get('read_messages'), everyone_perms_dict.get('send_messages'), verified_perms_dict.get('read_messages'), verified_perms_dict.get('send_messages')]
+
+        if False not in check_perms:
             return
-        
+
+    
         """Sending embed to logging channel."""
         embed = discord.Embed(title=f'#{general_chat} has just been locked.', description=f'[Jump!]({general_chat.jump_url})', color=self.bot.color, timestamp=discord.utils.utcnow())
-        embed.set_footer(text=f'Guild ID: {before.guild.id}')
-        await mega_alert_logs.send(embed=embed)
+
+        async for entry in before.guild.audit_logs(action=discord.AuditLogAction.channel_update, limit=1):
+            embed.add_field(name='Locked by:', value=f'{entry.user.mention}\n{entry.user}\n{entry.user.id}')
+
+        await send_webhook_embed('mega_alerts', embed)
 
     # Complete, need QA
     @commands.Cog.listener(name='on_guild_role_create')
