@@ -15,7 +15,7 @@ class Commands(commands.Cog):
     def __init__(self, bot: SirenBot):
         self.bot = bot
 
-    @commands.command(description='Creates 3 logging webhooks in the channels from `config.env`.')
+    @commands.command(description='Creates 3 logging webhooks in the channels from `config.env`. You must be Bot Master to run this command.')
     async def setup(self, ctx):     
         """
         ## Command is ran in the guild with the logs
@@ -73,7 +73,7 @@ class Commands(commands.Cog):
         embed = discord.Embed(description=f'Successfully created 3 logging webhooks in {general_channel.mention}, {critical_channel.mention}, and {mega_alert_channel.mention}.', color=self.bot.color)
         await ctx.send(embed=embed)
 
-    @commands.hybrid_command(description='Displays the current bot config.')
+    @commands.hybrid_command(description='Displays the current bot config. You must be Bot Master to run this command.')
     async def config(self, ctx):
         """Checks if the user that ran this command is 'bot_master' from config.env"""
         if ctx.author.id != get_bot_owner():
@@ -109,9 +109,13 @@ class Commands(commands.Cog):
         await ctx.send(embed=embed)
 
     # In progress
-    @commands.command(description='Check if the bot is missing any permissions for it to work properly.')
+    @commands.command(description='Check if the bot is missing any permissions for it to work properly. You must be Bot Master to run this command.')
     async def permscheck(self, ctx):
         if ctx.guild.id != get_guild_id():
+            return
+        
+        """Checks if the user that ran this command is 'bot_master' from config.env"""
+        if ctx.author.id != get_bot_owner():
             return
 
         bot_member_obj = ctx.guild.get_member(self.bot.user.id)
@@ -128,9 +132,13 @@ class Commands(commands.Cog):
         await ctx.send(embed=embed)
 
     # Complete, need QA
-    @commands.hybrid_command(description='Register the config. This command can only be run once. \n\nSlash command only.')
+    @commands.hybrid_command(description='Register the config. This command can only be run once. You must be Bot Master to run this command. \n\nSlash command only.')
     async def register(self, ctx, modrole: discord.Role, adminrole: discord.Role, teamrole: discord.Role, verifiedrole: discord.Role, generalchannel: discord.TextChannel):
         if ctx.interaction:
+            return
+        
+        """Checks if the user that ran this command is 'bot_master' from config.env"""
+        if ctx.author.id != get_bot_owner():
             return
         
         """Toven's work"""
