@@ -73,10 +73,12 @@ class Commands(commands.Cog):
         embed = discord.Embed(description=f'Successfully created 3 logging webhooks in {general_channel.mention}, {critical_channel.mention}, and {mega_alert_channel.mention}.', color=self.bot.color)
         await ctx.send(embed=embed)
 
-    """Need to figure out who's allowed to use this cmd."""
-
     @commands.hybrid_command(description='Displays the current bot config.')
     async def config(self, ctx):
+        """Checks if the user that ran this command is 'bot_master' from config.env"""
+        if ctx.author.id != get_bot_owner():
+            return
+
         """Getting objects."""
         guild = self.bot.get_guild(get_guild_id()) if get_guild_id != None else None
         general_chat = self.bot.get_channel(get_gen_chat()) if get_gen_chat != None else None
@@ -106,8 +108,7 @@ class Commands(commands.Cog):
         embed.set_footer(text=f'Bot ID: {self.bot.user.id}')
         await ctx.send(embed=embed)
 
-    """Incomplete"""
-
+    # In progress
     @commands.command(description='Check if the bot is missing any permissions for it to work properly.')
     async def permscheck(self, ctx):
         if ctx.guild.id != get_guild_id():
@@ -126,12 +127,13 @@ class Commands(commands.Cog):
         embed = discord.Embed(title=f'{self.bot.user} Permissions', description=bot_permissions, color=self.bot.color)
         await ctx.send(embed=embed)
 
-    @commands.group(invoke_without_command=True, description='Register a role or channel to the config.')
-    async def register(self, ctx):
-        pass
-
-    @register.command(description="Configure your server's database.")
-    async def setupdb(self, ctx: commands.Context, modrole: discord.Role, adminrole: discord.Role, teamrole: discord.Role, verifiedrole: discord.Role, generalchannel: discord.TextChannel):
+    # Complete, need QA
+    @commands.hybrid_command(description='Register the config. This command can only be run once. \n\nSlash command only.')
+    async def register(self, ctx, modrole: discord.Role, adminrole: discord.Role, teamrole: discord.Role, verifiedrole: discord.Role, generalchannel: discord.TextChannel):
+        if ctx.interaction:
+            return
+        
+        """Toven's work"""
         # Command takes the snowflake ID of various Discord base classes and stores them in the sqlitedb for later retrieval in event classes
         # start by getting the command's context guild id
         guild = ctx.guild.id
@@ -154,35 +156,15 @@ class Commands(commands.Cog):
         # show the user the config when it does run
         cursor.execute("SELECT * FROM guild_config WHERE guild_id = {}".format(guild))
         config = cursor.fetchall()
-        await ctx.send("Database configured. Config:\n{}".format(config))
 
-    @register.command(description='Register a moderator role to the config.')
-    async def modrole(self, ctx, role: discord.Role):
-        # Need code from Toven to add mod_role ID to db.
-        await ctx.send(role.mention)
-
-    @register.command(description='Register an administrator role to the config.')
-    async def adminrole(self, ctx, role: discord.Role):
-        # Need code from Toven to add admin_role ID to db.
-        await ctx.send(role.mention)
-
-    @register.command(description='Register a team role to the config.')
-    async def teamrole(self, ctx, role: discord.Role):
-        # Need code from Toven to add team_role ID to db.
-        await ctx.send(role.mention)
-
-    @register.command(description='Register an administrator role to the config.')
-    async def verifiedrole(self, ctx, role: discord.Role):
-        # Need code from Toven to add verified_role ID to db.
-        await ctx.send(role.mention)
-
-    @register.command(description='Register an administrator role to the config.')
-    async def generalchannel(self, ctx, channel: discord.TextChannel):
-        # Need code from Toven to add general_channel ID to db.
-        await ctx.send(channel.mention)
+        """Pattles' work (just the return embed)"""
+        embed = discord.Embed(description='Database configured. Config:\n{}\n\n'.format(config) + f'Use `{self.bot.prefix}config` to review your config at any time.', color=self.bot.color)
+        await ctx.send(embed=embed)
+        
+        # await ctx.send("Database configured. Config:\n{}".format(config))
+        # Replaced with embed. 
 
     
-
 
 async def setup(bot):
     await bot.add_cog(Commands(bot))

@@ -22,13 +22,6 @@ To visit the SirenBot documentation, click [here](https://sirenbot.gitbook.io/si
 *X emoji means offline. Red square means DND mode. Green means online. Orange means idle. Purple means online (any status) any % of time but not online more than 50% of the hour.*
 
 ## In progress
-### Commands
-* /register modrole role:@role - *need example code to add IDs to db to complete*
-* /register adminrole role:@role - *need example code to add IDs to db to complete*
-* /register teamrole role:@role - *need example code to add IDs to db to complete*
-* /register generalchannel channel:#general - *need example code to add IDs to db to complete*
-* /register verifiedrole role:@role - *need example code to add IDs to db to complete*
-
 ### Additional
 * Figure out required permissions for bot to function properly.
 * Finish documentation
@@ -42,6 +35,13 @@ To visit the SirenBot documentation, click [here](https://sirenbot.gitbook.io/si
 * New webhooks created
 * Watch general chat to see if it gets locked. (Send messages or view channel disabled for verified role or @everyone)
 
+### Commands
+* /register modrole role:@role
+* /register adminrole role:@role
+* /register teamrole role:@role
+* /register generalchannel channel:#general
+* /register verifiedrole role:@role
+
 ### Additional
 * Help menu
 
@@ -54,3 +54,4 @@ To visit the SirenBot documentation, click [here](https://sirenbot.gitbook.io/si
 * Manage Channels *(for webhook events)*
 * Embed Links
 * Manage Webhooks *(for setup cmd)*
+* View Audit Log
