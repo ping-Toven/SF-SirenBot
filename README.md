@@ -6,7 +6,6 @@ To visit the SirenBot documentation, click [here](https://sirenbot.gitbook.io/si
 # To Do List
 ## Incomplete:
 ### Events
-* Users in watched roles kicked/banned
 * Users in watched roles losing any roles
 * Users in watched roles' activity.
 * How many people are boosting the server / if the server is about to lose a boost
@@ -34,6 +33,7 @@ To visit the SirenBot documentation, click [here](https://sirenbot.gitbook.io/si
 * Any role being CREATED WITH: `administrator`, `manage_roles`, `mention_everyone`, `manage_webhooks`, `manage_channels`, `manage_server` perms.
 * New webhooks created
 * Watch general chat to see if it gets locked. (Send messages or view channel disabled for verified role or @everyone)
+* Users in watched roles kicked/banned
 
 ### Commands
 * /register modrole role:@role

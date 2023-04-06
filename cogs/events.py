@@ -243,6 +243,45 @@ class Events(commands.Cog):
             embed.set_footer(text=f'User ID: {after.id}')
             await send_webhook_embed('critical', embed)
         
+    # Complete, need QA
+    @commands.Cog.listener(name='on_member_remove')
+    async def watched_members_removed(self, member):
+        """
+        If a member with any of the watched roles leaves the server (kick, ban, or of their own accord),
+        Mega alert gets sent.
+        """
+        
+        watched_roles = {member.guild.get_role(get_admin_role()), member.guild.get_role(get_mod_role()), member.guild.get_role(get_team_role())}
+        member_roles = {role for role in member.roles}
+
+        if not member_roles.intersection(watched_roles):
+            return
+        
+        watched_roles_lost = list(member_roles.intersection(watched_roles))
+
+        """Send embed"""
+        embed = discord.Embed(title=f'Watched member left {member.guild.name}', color=self.bot.color)
+        embed.add_field(name='Watched roles left with:', value=' '.join(role.mention for role in watched_roles_lost))
+        embed.set_author(name=member, icon_url=member.avatar)
+        embed.set_footer(text=f'User ID: {member.id}')
+        
+        async for entry in member.guild.audit_logs(action=discord.AuditLogAction.kick, limit=1):
+            if entry.target == member:
+                embed.add_field(name='Reason for leaving:', value=f'{member.name} left was **kicked** by {entry.user} (`{entry.user.id}`) {f"with reason `{entry.reason}`" if entry.reason else "without a reason"}.')
+                await send_webhook_embed('mega_alerts', embed)
+                return
+            
+        async for entry in member.guild.audit_logs(action=discord.AuditLogAction.ban, limit=1):
+            if entry.target == member:
+                embed.add_field(name='Reason for leaving:', value=f'{member.name} left was **banned** by {entry.user} (`{entry.user.id}`) {f"with reason `{entry.reason}`" if entry.reason else "without a reason"}.')
+                await send_webhook_embed('mega_alerts', embed)
+                return
+
+        embed.add_field(name='Reason for leaving:', value='Their own accord.')
+        await send_webhook_embed('mega_alerts', embed)
+
+        
+
         
 
 
