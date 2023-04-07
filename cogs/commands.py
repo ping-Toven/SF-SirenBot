@@ -107,10 +107,28 @@ class Commands(commands.Cog):
     # In progress
     @commands.command(description='Check if the bot is missing any permissions for it to work properly. Administrator privileges required.')
     @commands.has_permissions(administrator=True)
-    async def permscheck(self, ctx):
+    async def checkperms(self, ctx):
         if ctx.guild.id != get_guild_id():
             return
         
+        
+        """Getting all permissions from the bot"""
+        bot_member_obj = ctx.guild.get_member(self.bot.user.id)
+        required_perms = ['read_messages', 'view_audit_log', 'manage_webhooks', 'send_messages', 'embed_links', 'read_message_history']
+        
+        desc = ''
+        for (permission, value) in bot_member_obj.guild_permissions:
+            if permission in required_perms and value is True:
+                desc += f'✅ {permission.replace("_", " ").title()} \n'
+            if permission in required_perms and value is False:
+                desc += f'❌ {permission.replace("_", " ").title()} \n'
+
+        embed = discord.Embed(title=f'{self.bot.user} Permissions', description='```\n' + desc + '```', color=self.bot.color)
+        await ctx.send(embed=embed)
+        return
+
+        #...
+
         bot_member_obj = ctx.guild.get_member(self.bot.user.id)
 
         """Getting all permissions from bot.."""
@@ -162,7 +180,7 @@ class Commands(commands.Cog):
         # await ctx.send("Database configured. Config:\n{}".format(config))
         # Replaced with embed. 
 
-    # Complete, need QA
+    # Complete
     @commands.command(description="Syncs all commands globally. Administrator privileges required.")
     @commands.has_permissions(administrator=True)
     async def sync(self, ctx: commands.Context, guilds: commands.Greedy[discord.Object], spec: Optional[Literal["~", "*", "^"]] = None) -> None:

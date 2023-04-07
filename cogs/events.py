@@ -14,18 +14,18 @@ class Events(commands.Cog):
     def __init__(self, bot:SirenBot):
         self.bot = bot
     
-    # Complete, need QA
+    # Complete
     @commands.Cog.listener(name='on_webhooks_update')
     async def webhook_updates(self, channel):
         """
         If a webhook gets created, modified, or deleted,
         Mega alert gets sent.
         """
-
         if channel.guild.id != get_guild_id():
             return
-                
-        time_ago = discord.utils.utcnow() - timedelta(seconds=50)
+
+
+        time_ago = discord.utils.utcnow() - timedelta(seconds=60)
         webhook_create, webhook_delete, webhook_update = [], [], []
 
         async for entry in channel.guild.audit_logs(action=discord.AuditLogAction.webhook_create, limit=1, after=time_ago):
@@ -36,8 +36,9 @@ class Events(commands.Cog):
 
         async for entry in channel.guild.audit_logs(action=discord.AuditLogAction.webhook_update, limit=1, after=time_ago):
             webhook_update.append(entry)
+        
 
-        # Need to update.
+        # Complete
         if webhook_create != []:
             entry = webhook_create[0]
 
@@ -46,7 +47,7 @@ class Events(commands.Cog):
                     webhook_obj = webhook
                     break
 
-            embed = discord.Embed(title='Webhook created', description=f'A webhook has been created in {webhook_obj.channel.mention}.', color=self.bot.color)
+            embed = discord.Embed(title='Webhook created', description=f'A webhook has been created in {webhook_obj.channel.mention}.', color=self.bot.color, timestamp=discord.utils.utcnow())
             embed.add_field(name='Created by:', value=f'{entry.user.mention}\n{entry.user}\n{entry.user.id}')
             embed.add_field(name='Webhook Name:', value='`{}`'.format(webhook_obj.name))
             embed.set_image(url=webhook_obj.display_avatar)
@@ -54,11 +55,11 @@ class Events(commands.Cog):
             embed.set_footer(text='Displayed above is the webhook avatar.')
             await send_webhook_embed('mega_alerts', embed)
             
-        # Complete, need QA
+        # Complete
         if webhook_delete != []:
             entry = webhook_delete[0]
 
-            embed = discord.Embed(title='Webhook deleted', description=f'A webhook has been deleted.', color=self.bot.color)
+            embed = discord.Embed(title='Webhook deleted', description=f'A webhook has been deleted.', color=self.bot.color, timestamp=discord.utils.utcnow())
             embed.add_field(name='Deleted by:', value=f'{entry.user.mention}\n{entry.user}\n{entry.user.id}')
             embed.add_field(name='Webhook Name:', value=entry.before.name)
             embed.set_image(url=entry.before.avatar)
@@ -66,7 +67,7 @@ class Events(commands.Cog):
             embed.set_footer(text='Displayed above is the webhook avatar.')
             await send_webhook_embed('mega_alerts', embed)
             
-        # Complete, need QA
+        # Complete
         if webhook_update != []:
             entry = webhook_update[0]
 
@@ -74,8 +75,9 @@ class Events(commands.Cog):
                 if webhook.id == entry.target.id:
                     webhook_obj = webhook
                     break
-    
-            embed = discord.Embed(title='Webhook updated', description=f'A webhook has been updated in {webhook_obj.channel.mention}.', color=self.bot.color)
+            
+
+            embed = discord.Embed(title='Webhook updated', description=f'A webhook has been updated in {webhook_obj.channel.mention}.', color=self.bot.color, timestamp=discord.utils.utcnow())
             embed.add_field(name='Updated by:', value=f'{entry.user.mention}\n{entry.user}\n{entry.user.id}')
             
             """Checking if the webhook name was updated"""
@@ -94,7 +96,7 @@ class Events(commands.Cog):
             embed.set_footer(text='Displayed above is the webhook avatar.')
             await send_webhook_embed('mega_alerts', embed)
 
-    # Complete, need QA
+    # Complete
     @commands.Cog.listener(name='on_guild_leave')
     async def sirenbot_leaves_guild(self, guild):
         """
@@ -108,7 +110,7 @@ class Events(commands.Cog):
         embed = discord.Embed(title=f'Bot Left {guild.name}', description=f'{self.bot.user.mention} has just left {guild.name}.', color=self.bot.color, timestamp=discord.utils.utcnow())
         await send_webhook_embed('mega_alerts', embed)
 
-    # Complete, need QA
+    # Complete
     @commands.Cog.listener(name='on_guild_channel_update')
     async def general_locked(self, before, after):
         """
@@ -144,7 +146,7 @@ class Events(commands.Cog):
 
         await send_webhook_embed('mega_alerts', embed)
 
-    # Complete, need QA
+    # Complete
     @commands.Cog.listener(name='on_guild_role_create')
     async def scary_role_created(self, role):
         """
@@ -179,7 +181,7 @@ class Events(commands.Cog):
 
         await send_webhook_embed('mega_alerts', embed)
 
-    # Complete, need QA
+    # Complete
     @commands.Cog.listener(name='on_guild_role_update')
     async def scary_role_updated(self, before, after):
         """
@@ -217,7 +219,7 @@ class Events(commands.Cog):
         
         await send_webhook_embed('mega_alerts', embed)
 
-    # Complete, need QA
+    # Complete
     @commands.Cog.listener(name='on_member_update')
     async def watched_roles_given(self, before, after):
         """
@@ -241,9 +243,10 @@ class Events(commands.Cog):
             embed = discord.Embed(title='Watched role given', description=f'{different_role.mention} has been given to {after.mention}.', color=self.bot.color, timestamp=discord.utils.utcnow())
             embed.set_author(name=after, icon_url=after.avatar)
             embed.set_footer(text=f'User ID: {after.id}')
+
             await send_webhook_embed('critical', embed)
         
-    # Complete, need QA
+    # Complete
     @commands.Cog.listener(name='on_member_remove')
     async def watched_members_removed(self, member):
         """
@@ -263,7 +266,7 @@ class Events(commands.Cog):
         watched_roles_lost = list(member_roles.intersection(watched_roles))
 
         """Send embed"""
-        embed = discord.Embed(title=f'Watched member left {member.guild.name}', color=self.bot.color)
+        embed = discord.Embed(title=f'Watched member left {member.guild.name}', color=self.bot.color, timestamp=discord.utils.utcnow())
         embed.add_field(name='Watched roles left with:', value=' '.join(role.mention for role in watched_roles_lost))
         embed.set_author(name=member, icon_url=member.avatar)
         embed.set_footer(text=f'User ID: {member.id}')
@@ -283,7 +286,7 @@ class Events(commands.Cog):
         embed.add_field(name='Reason for leaving:', value='Their own accord.')
         await send_webhook_embed('mega_alerts', embed)
 
-    # Complete, need QA
+    # Complete
     @commands.Cog.listener(name='on_member_update')
     async def watched_members_roles_removed(self, before, after):
         """
@@ -314,7 +317,19 @@ class Events(commands.Cog):
 
         await send_webhook_embed('mega_alerts', embed)
         
-
+    # Complete
+    @commands.Cog.listener()
+    async def on_guild_join(self, guild):
+        embed = discord.Embed(description='Visit the [documentation](https://sirenbot.gitbook.io/sirenbot-documentation/) for instructions on how to setup the bot.', color=self.bot.color)
+        
+        for channel in guild.channels:
+            if type(channel) == discord.TextChannel:
+                try:
+                    await channel.send(embed=embed)
+                    return
+                except:
+                    continue
+            
         
 
 
