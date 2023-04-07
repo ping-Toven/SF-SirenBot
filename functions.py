@@ -148,19 +148,6 @@ def get_mega_alert_logs():
         mega_alert_logs_id = 0
     return mega_alert_logs_id
 
-def get_bot_owner():
-    """
-    Gets bot_owner from config.env
-    rtype: int
-    """
-    bot_owner_str = os.getenv('BOT_OWNER')
-    try:
-        bot_owner_id = int(bot_owner_str)
-    except:
-        bot_owner_id = 0
-    return bot_owner_id
-
-
 """JSON"""
 def load_json(filename):
     """
