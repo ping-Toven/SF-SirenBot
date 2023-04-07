@@ -6,7 +6,6 @@ To visit the SirenBot documentation, click [here](https://sirenbot.gitbook.io/si
 # To Do List
 ## Incomplete:
 ### Events
-* Users in watched roles losing any roles
 * Users in watched roles' activity.
 * How many people are boosting the server / if the server is about to lose a boost
     > "if you keep track of when people boost (which wont work with people who are boosting multiple times) then you can track when their boost might be about to expire (but you'd have to double check when the boost is actually supposed to expire because they mightve renewed it)"
@@ -34,6 +33,7 @@ To visit the SirenBot documentation, click [here](https://sirenbot.gitbook.io/si
 * New webhooks created
 * Watch general chat to see if it gets locked. (Send messages or view channel disabled for verified role or @everyone)
 * Users in watched roles kicked/banned
+* Users in watched roles losing any roles
 
 ### Commands
 * /register modrole role:@role

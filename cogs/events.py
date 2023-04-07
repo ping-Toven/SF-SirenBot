@@ -250,6 +250,9 @@ class Events(commands.Cog):
         If a member with any of the watched roles leaves the server (kick, ban, or of their own accord),
         Mega alert gets sent.
         """
+        if member.guild.id != get_guild_id():
+            return
+
         
         watched_roles = {member.guild.get_role(get_admin_role()), member.guild.get_role(get_mod_role()), member.guild.get_role(get_team_role())}
         member_roles = {role for role in member.roles}
@@ -280,6 +283,36 @@ class Events(commands.Cog):
         embed.add_field(name='Reason for leaving:', value='Their own accord.')
         await send_webhook_embed('mega_alerts', embed)
 
+    # Complete, need QA
+    @commands.Cog.listener(name='on_member_update')
+    async def watched_members_roles_removed(self, before, after):
+        """
+        If users with any of the watched roles (admin, moderator, team) lose any roles,
+        Mega alert gets sent.
+        """
+        if before.guild.id != get_guild_id():
+            return
+        
+        if before.roles == after.roles:
+            return
+        
+        watched_roles = {before.guild.get_role(get_admin_role()), before.guild.get_role(get_mod_role()), before.guild.get_role(get_team_role())}
+
+        if not set(before.roles).intersection(watched_roles):
+            return
+
+        if not set(before.roles).difference(set(after.roles)):
+            return
+
+        different_role = set(before.roles).difference(set(after.roles))
+        different_role = list(different_role)[0]
+
+        embed = discord.Embed(title='Watched member lost a role', color=self.bot.color, timestamp=discord.utils.utcnow())
+        embed.add_field(name='Role lost:', value=different_role.mention)
+        embed.set_author(name=before, icon_url=before.avatar)
+        embed.set_footer(text=f'User ID: {before.id}')
+
+        await send_webhook_embed('mega_alerts', embed)
         
 
         
