@@ -11,8 +11,6 @@ To visit the SirenBot documentation, click [here](https://sirenbot.gitbook.io/si
     > "if you keep track of when people boost (which wont work with people who are boosting multiple times) then you can track when their boost might be about to expire (but you'd have to double check when the boost is actually supposed to expire because they mightve renewed it)"
 
 ### Functions
-* Send a webhook to command server (hardcoded in) when the activity above happens.
-* Send a webhook to command server when specific really bad activity happens.
 * Send a webhook to command server every day at noon with user activity recorded. I.e. a text based graph that looks like this, with each mod having their own thread in a specific channel
 
 > ![image](https://user-images.githubusercontent.com/57507687/217126127-9deee77d-3df3-4e3d-baef-0bff8cb2a7f5.png)
@@ -41,6 +39,10 @@ To visit the SirenBot documentation, click [here](https://sirenbot.gitbook.io/si
 * /register teamrole role:@role
 * /register generalchannel channel:#general
 * /register verifiedrole role:@role
+
+### Functions
+* Send a webhook to command server (hardcoded in) when the activity above happens.
+* Send a webhook to command server when specific really bad activity happens.
 
 ### Additional
 * Help menu
