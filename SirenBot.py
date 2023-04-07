@@ -27,7 +27,6 @@ INITIAL_EXTENSIONS = [
     # "cogs.example_cog",
     'cogs.events',
     'cogs.commands',
-    'cogs.developer',
     'cogs.testing' # Remove this when final.
     ]
   
@@ -127,7 +126,7 @@ class MyHelp(commands.HelpCommand):
 
                 """Adding embed fields for each command category."""
                 """Not displaying hidden categories."""
-                if cog_name not in ['Developer', 'Events', 'Testing']: # Remove 'Testing' after completion
+                if cog_name not in ['Events', 'Testing']: # Remove 'Testing' after completion
                     command_list = []
                     for command in commands:
                         command_list.append(command.name)
@@ -138,7 +137,7 @@ class MyHelp(commands.HelpCommand):
                     embed.add_field(name=cog_name, value=f'`{command_list}`', inline=False)
 
                 """Displaying hidden categories is author is a developer."""
-                if cog_name in ['Developer', 'Testing'] and self.context.author.id in SirenBot.developer_ids: # Remove 'Testing' after completion
+                if cog_name in ['Testing'] and self.context.author.id in SirenBot.developer_ids: # Remove 'Testing' after completion
                     command_list = []
                     for command in commands:
                         command_list.append(command.name)
@@ -154,7 +153,7 @@ class MyHelp(commands.HelpCommand):
         cog_name = command.cog_name
     
         """Cancels the command if the author is attempting to view a command from a hidden category."""
-        if cog_name in ['Developer', 'Events', 'Testing'] and self.context.author.id not in SirenBot.developer_ids: # Remove 'Testing' after completion
+        if cog_name in ['Events', 'Testing'] and self.context.author.id not in SirenBot.developer_ids: # Remove 'Testing' after completion
             return
 
         if command.cog:
@@ -201,10 +200,6 @@ class MyHelp(commands.HelpCommand):
         
         signature = group.signature.replace("=", "").replace("None", "").replace("...", "").replace("|", "/").replace('"', "").replace("_", " ") if group.signature else None
 
-        if not signature:
-            # Temporarily hardcoded until I find a better way to do this.
-            if group.name == 'register':
-                signature = '<subcommand>'
         if True:
             required = ''
             optional = ''
