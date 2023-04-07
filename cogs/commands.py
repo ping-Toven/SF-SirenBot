@@ -104,7 +104,7 @@ class Commands(commands.Cog):
         embed.set_footer(text=f'Bot ID: {self.bot.user.id}')
         await ctx.send(embed=embed)
 
-    # In progress
+    # Complete
     @commands.command(description='Check if the bot is missing any permissions for it to work properly. Administrator privileges required.')
     @commands.has_permissions(administrator=True)
     async def checkperms(self, ctx):
