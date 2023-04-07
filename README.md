@@ -19,7 +19,6 @@ To visit the SirenBot documentation, click [here](https://sirenbot.gitbook.io/si
 
 ## In progress
 ### Additional
-* Figure out required permissions for bot to function properly.
 * Finish documentation
 
 ## Complete
@@ -46,14 +45,14 @@ To visit the SirenBot documentation, click [here](https://sirenbot.gitbook.io/si
 
 ### Additional
 * Help menu
+* Figure out required permissions for bot to function properly.
 
 ## Additional Information
 ### Permissions Required
 * View Channels
-* Read Messages
-* Send Messages
-* Read Message History
-* Manage Channels *(for webhook events)*
-* Embed Links
-* Manage Webhooks *(for setup cmd)*
 * View Audit Log
+* Manage Webhooks
+* Send Messages
+* Embed Links
+* Read Message History
+For more information on why permissions are needed, click [here](https://sirenbot.gitbook.io/sirenbot-documentation/#why-does-the-bot-need-these-permissions)

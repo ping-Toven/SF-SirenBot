@@ -111,7 +111,6 @@ class Commands(commands.Cog):
         if ctx.guild.id != get_guild_id():
             return
         
-        
         """Getting all permissions from the bot"""
         bot_member_obj = ctx.guild.get_member(self.bot.user.id)
         required_perms = ['read_messages', 'view_audit_log', 'manage_webhooks', 'send_messages', 'embed_links', 'read_message_history']
