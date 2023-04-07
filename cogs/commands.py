@@ -15,7 +15,9 @@ class Commands(commands.Cog):
     def __init__(self, bot: SirenBot):
         self.bot = bot
 
-    @commands.command(description='Creates 3 logging webhooks in the channels from `config.env`. You must be Bot Master to run this command.')
+    # Complete
+    @commands.command(description='Creates 3 logging webhooks in the channels from `config.env`. Administrator privileges required.')
+    @commands.has_permissions(administrator=True)
     async def setup(self, ctx):     
         """
         ## Command is ran in the guild with the logs
@@ -33,14 +35,10 @@ class Commands(commands.Cog):
         
         Sends a response
         """
-
-        """Checks if the user that ran this command is 'bot_master' from config.env"""
-        if ctx.author.id != get_bot_owner():
-            return
         
         """Checks if there are webhooks titled 'mega', 'critical', 'general' anywhere in the server"""
         for webhook in await ctx.guild.webhooks():
-            if webhook.name in ['mega', 'critical', 'SB General Logs']:
+            if webhook.name in ['SB Mega Alert Logs', 'SB Critical Logs', 'SB General Logs']:
                 await webhook.delete()
                 continue
 
@@ -70,15 +68,13 @@ class Commands(commands.Cog):
             return
         
         """Sending a response"""
-        embed = discord.Embed(description=f'Successfully created 3 logging webhooks in {general_channel.mention}, {critical_channel.mention}, and {mega_alert_channel.mention}.', color=self.bot.color)
+        embed = discord.Embed(description=f'Successfully created 3 logging webhooks in {general_channel.mention}, {critical_channel.mention}, and {mega_alert_channel.mention}.\n\nDo not rename the webhooks.', color=self.bot.color)
         await ctx.send(embed=embed)
 
-    @commands.hybrid_command(description='Displays the current bot config. You must be Bot Master to run this command.')
+    # Complete
+    @commands.hybrid_command(description='Displays the current bot config. Administrator privileges required.')
+    @commands.has_permissions(administrator=True)
     async def config(self, ctx):
-        """Checks if the user that ran this command is 'bot_master' from config.env"""
-        if ctx.author.id != get_bot_owner():
-            return
-
         """Getting objects."""
         guild = self.bot.get_guild(get_guild_id()) if get_guild_id != None else None
         general_chat = self.bot.get_channel(get_gen_chat()) if get_gen_chat != None else None
@@ -92,32 +88,29 @@ class Commands(commands.Cog):
         embed = discord.Embed(title=f'{guild.name} Config', color=self.bot.color)
         embed.add_field(name='Guild:', value=f'{guild.name}\n`{guild.id}`' if guild != None else '`None`')
         embed.add_field(name='Admin Role:',
-                        value=f'{admin_role}\n`{admin_role.id}`\n{admin_role.mention}' if admin_role != None else '`None`')
+                value=f'{admin_role}\n`{admin_role.id}`\n{admin_role.mention}' if admin_role != None else '`None`')
         embed.add_field(name='Mod Role:',
-                        value=f'{mod_role}\n`{mod_role.id}`\n{mod_role.mention}' if mod_role != None else '`None`')
+                value=f'{mod_role}\n`{mod_role.id}`\n{mod_role.mention}' if mod_role != None else '`None`')
         embed.add_field(name='Team Role:',
-                        value=f'{team_role}\n`{team_role.id}`\n{team_role.mention}' if team_role != None else '`None`')
+                value=f'{team_role}\n`{team_role.id}`\n{team_role.mention}' if team_role != None else '`None`')
         embed.add_field(name='Verified Role:',
-                        value=f'{verified_role}\n`{verified_role.id}`\n{verified_role.mention}' if verified_role != None else '`None`')
+                value=f'{verified_role}\n`{verified_role.id}`\n{verified_role.mention}' if verified_role != None else '`None`')
         embed.add_field(name='General Channel:',
-                        value=f'{general_chat}\n`{general_chat.id}`\n{general_chat.mention}' if general_chat != None else '`None`')
+                value=f'{general_chat}\n`{general_chat.id}`\n{general_chat.mention}' if general_chat != None else '`None`')
         embed.add_field(name='Logging Channel:',
-                        value=f'{logging_channel}\n`{logging_channel.id}`\n{logging_channel.mention}' if logging_channel != None else '`None`')
+                value=f'{logging_channel}\n`{logging_channel.id}`\n{logging_channel.mention}' if logging_channel != None else '`None`')
 
         embed.set_thumbnail(url=self.bot.user.avatar)
         embed.set_footer(text=f'Bot ID: {self.bot.user.id}')
         await ctx.send(embed=embed)
 
     # In progress
-    @commands.command(description='Check if the bot is missing any permissions for it to work properly. You must be Bot Master to run this command.')
+    @commands.command(description='Check if the bot is missing any permissions for it to work properly. Administrator privileges required.')
+    @commands.has_permissions(administrator=True)
     async def permscheck(self, ctx):
         if ctx.guild.id != get_guild_id():
             return
         
-        """Checks if the user that ran this command is 'bot_master' from config.env"""
-        if ctx.author.id != get_bot_owner():
-            return
-
         bot_member_obj = ctx.guild.get_member(self.bot.user.id)
 
         """Getting all permissions from bot.."""
@@ -131,14 +124,11 @@ class Commands(commands.Cog):
         embed = discord.Embed(title=f'{self.bot.user} Permissions', description=bot_permissions, color=self.bot.color)
         await ctx.send(embed=embed)
 
-    # Complete, need QA
-    @commands.hybrid_command(description='Register the config. This command can only be run once. You must be Bot Master to run this command. \n\nSlash command only.')
+    # Complete
+    @commands.hybrid_command(description='Register the config. One-time run only. Administrator privileges required. Slash command only.')
+    @commands.has_permissions(administrator=True)
     async def register(self, ctx, modrole: discord.Role, adminrole: discord.Role, teamrole: discord.Role, verifiedrole: discord.Role, generalchannel: discord.TextChannel):
         if ctx.interaction:
-            return
-        
-        """Checks if the user that ran this command is 'bot_master' from config.env"""
-        if ctx.author.id != get_bot_owner():
             return
         
         """Toven's work"""
@@ -172,7 +162,45 @@ class Commands(commands.Cog):
         # await ctx.send("Database configured. Config:\n{}".format(config))
         # Replaced with embed. 
 
-    
+    # Complete, need QA
+    @commands.command(description="Syncs all commands globally. Administrator privileges required.")
+    @commands.has_permissions(administrator=True)
+    async def sync(self, ctx: commands.Context, guilds: commands.Greedy[discord.Object], spec: Optional[Literal["~", "*", "^"]] = None) -> None:
+        if ctx.author.id not in self.bot.developer_ids:
+            return
+
+        embed = discord.Embed(description="Syncing...", color=self.bot.color)
+        msg = await ctx.send(embed=embed)
+        print("Syncing...")
+        if not guilds:
+            if spec == "~":
+                synced = await ctx.bot.tree.sync(guild=ctx.guild)
+            elif spec == "*":
+                ctx.bot.tree.copy_global_to(guild=ctx.guild)
+                synced = await ctx.bot.tree.sync(guild=ctx.guild)
+            elif spec == "^":
+                ctx.bot.tree.clear_commands(guild=ctx.guild)
+                await ctx.bot.tree.sync(guild=ctx.guild)
+                synced = []
+            else:
+                synced = await ctx.bot.tree.sync()
+
+            await msg.edit(embed=discord.Embed(description=f"Synced `{len(synced)}` commands {'globally' if spec is None else 'to the current guild.'}.", color=self.bot.color))
+            print("Synced.")
+            return
+        
+        ret = 0
+        for guild in guilds:
+            try:
+                await ctx.bot.tree.sync(guild=guild)
+            except discord.HTTPException:
+                pass
+            else:
+                ret += 1
+
+        await msg.edit(embed=discord.Embed(description=f"Synced the tree to {ret}/{len(guilds)}.", color=self.bot.color))
+        print("Synced.")
+
 
 async def setup(bot):
     await bot.add_cog(Commands(bot))
