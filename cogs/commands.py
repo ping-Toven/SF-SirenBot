@@ -127,20 +127,6 @@ class Commands(commands.Cog):
         await ctx.send(embed=embed)
         return
 
-        #...
-
-        bot_member_obj = ctx.guild.get_member(self.bot.user.id)
-
-        """Getting all permissions from bot.."""
-        bot_permissions = ''
-        for (permission, value) in bot_member_obj.guild_permissions:
-            if value is True:
-                bot_permissions += f'✅ {permission} \n'
-            else:
-                bot_permissions += f'❌ {permission} \n'
-
-        embed = discord.Embed(title=f'{self.bot.user} Permissions', description=bot_permissions, color=self.bot.color)
-        await ctx.send(embed=embed)
 
     # Complete
     @commands.hybrid_command(description='Register the config. One-time run only. Administrator privileges required. Slash command only.')
