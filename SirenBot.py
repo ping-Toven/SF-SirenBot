@@ -7,14 +7,9 @@ DB_PATH = 'SF-SirenBot/sirenDB.db'
 """CONFIG"""
 PREFIX = 'sb!'
 
-import datetime
-import json
 import os
-import sqlite3
 import sys
 import traceback
-from datetime import datetime, timezone
-import aiohttp
 
 import discord
 from discord.ext import commands
@@ -24,10 +19,9 @@ from dotenv import load_dotenv
 load_dotenv('SF-SirenBot/token.env') 
 
 INITIAL_EXTENSIONS = [
-    # "cogs.example_cog",
     'cogs.events',
     'cogs.commands',
-    'cogs.testing' # Remove this when final.
+    # 'cogs.testing' Removed after development.
     ]
   
 class SirenBot(commands.Bot):
@@ -126,24 +120,24 @@ class MyHelp(commands.HelpCommand):
 
                 """Adding embed fields for each command category."""
                 """Not displaying hidden categories."""
-                if cog_name not in ['Events', 'Testing']: # Remove 'Testing' after completion
+                if cog_name not in ['Events']: # , 'Testing']: Removed after development.
                     command_list = []
                     for command in commands:
                         command_list.append(command.name)
-                    if cog_name in ['General']:
+                    if cog_name in ['Commands']:
                         command_list.append('help')
                     command_list.sort()
                     command_list = '`, `'.join(command_list)
                     embed.add_field(name=cog_name, value=f'`{command_list}`', inline=False)
 
-                """Displaying hidden categories is author is a developer."""
-                if cog_name in ['Testing'] and self.context.author.id in SirenBot.developer_ids: # Remove 'Testing' after completion
-                    command_list = []
-                    for command in commands:
-                        command_list.append(command.name)
-                    command_list.sort()
-                    command_list = '`, `'.join(command_list)
-                    embed.add_field(name=cog_name, value=f'`{command_list}`', inline=False)
+                # """Displaying hidden categories is author is a developer."""
+                # if cog_name in ['Testing'] and self.context.author.id in SirenBot.developer_ids: # Remove 'Testing' after completion
+                #     command_list = []
+                #     for command in commands:
+                #         command_list.append(command.name)
+                #     command_list.sort()
+                #     command_list = '`, `'.join(command_list)
+                #     embed.add_field(name=cog_name, value=f'`{command_list}`', inline=False)
 
         embed.set_footer(text=f'Use {SirenBot.prefix}help [command] for more info on a specific command.', icon_url=SirenBot.user.avatar)
         await self.context.reply(embed=embed)
@@ -152,17 +146,17 @@ class MyHelp(commands.HelpCommand):
     async def send_command_help(self, command):
         cog_name = command.cog_name
     
-        """Cancels the command if the author is attempting to view a command from a hidden category."""
-        if cog_name in ['Events', 'Testing'] and self.context.author.id not in SirenBot.developer_ids: # Remove 'Testing' after completion
-            return
+        # """Cancels the command if the author is attempting to view a command from a hidden category."""
+        # if cog_name in ['Events', 'Testing'] and self.context.author.id not in SirenBot.developer_ids: 
+        #     return
+        # Removed after development.
 
         if command.cog:
             cog_name = cog_name.replace('_', ' ')
     
-    
         """Temporary fix for 'help' not displaying under the 'General' category for '!help help'."""
         if command.name in ['help'] and not command.cog:
-            cog_name = 'General'
+            cog_name = 'Commands'
 
         embed = discord.Embed(title=f'Help | {cog_name} {f"› {command.parent} " if command.parent != None else ""}› {command.name}', description=command.description, color=SirenBot.color)
         

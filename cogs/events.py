@@ -1,6 +1,4 @@
-import datetime
-from datetime import datetime, timezone, timedelta
-import aiohttp
+from datetime import timedelta
 
 import discord
 from discord import app_commands
@@ -62,7 +60,6 @@ class Events(commands.Cog):
             embed = discord.Embed(title='Webhook deleted', description=f'A webhook has been deleted.', color=self.bot.color, timestamp=discord.utils.utcnow())
             embed.add_field(name='Deleted by:', value=f'{entry.user.mention}\n{entry.user}\n{entry.user.id}')
             embed.add_field(name='Webhook Name:', value=entry.before.name)
-            embed.set_image(url=entry.before.avatar)
 
             embed.set_footer(text='Displayed above is the webhook avatar.')
             await send_webhook_embed('mega_alerts', embed)
@@ -107,7 +104,7 @@ class Events(commands.Cog):
         if guild.id != get_guild_id():
             return
 
-        embed = discord.Embed(title=f'Bot Left {guild.name}', description=f'{self.bot.user.mention} has just left {guild.name}.', color=self.bot.color, timestamp=discord.utils.utcnow())
+        embed = discord.Embed(title=f'{self.bot.user} Left {guild.name}', description=f'{self.bot.user.mention} has just left {guild.name}.', color=self.bot.color, timestamp=discord.utils.utcnow())
         await send_webhook_embed('mega_alerts', embed)
 
     # Complete
@@ -288,7 +285,7 @@ class Events(commands.Cog):
 
     # Complete
     @commands.Cog.listener(name='on_member_update')
-    async def watched_members_roles_removed(self, before, after):
+    async def watched_members_lose_roles(self, before, after):
         """
         If users with any of the watched roles (admin, moderator, team) lose any roles,
         Mega alert gets sent.
@@ -320,7 +317,9 @@ class Events(commands.Cog):
     # Complete
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
-        embed = discord.Embed(description='Visit the [documentation](https://sirenbot.gitbook.io/sirenbot-documentation/) for instructions on how to setup the bot.', color=self.bot.color)
+        embed = discord.Embed(title=f'{self.bot.user} has joined!', description='SirenBot is ServerForge\'s OSS Discord Bot. Monitor dangerous changes in your communities and be alerted as soon as they happen.\n\n', color=self.bot.color)
+        embed.add_field(name='Links', value='> [Documentation](https://sirenbot.gitbook.io/sirenbot-documentation/)\n' \
+            + '> [Github](https://github.com/ping-Toven/SF-SirenBot/tree/main)')
         
         for channel in guild.channels:
             if type(channel) == discord.TextChannel:

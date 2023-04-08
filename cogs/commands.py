@@ -1,6 +1,3 @@
-import datetime
-from datetime import datetime, timezone
-
 import discord
 import sqlite3
 from discord import app_commands
@@ -16,7 +13,7 @@ class Commands(commands.Cog):
         self.bot = bot
 
     # Complete
-    @commands.command(description='Creates 3 logging webhooks in the channels from `config.env`. Administrator privileges required.')
+    @commands.hybrid_command(description='Creates 3 logging webhooks in the channels from `config.env`. Administrator privileges required.')
     @commands.has_permissions(administrator=True)
     async def setup(self, ctx):     
         """
@@ -105,7 +102,7 @@ class Commands(commands.Cog):
         await ctx.send(embed=embed)
 
     # Complete
-    @commands.command(description='Check if the bot is missing any permissions for it to work properly. Administrator privileges required.')
+    @commands.hybrid_command(description='Check the bot\'s permissions to ensure proper function. Administrator privileges required.')
     @commands.has_permissions(administrator=True)
     async def checkperms(self, ctx):
         if ctx.guild.id != get_guild_id():
@@ -126,7 +123,6 @@ class Commands(commands.Cog):
         await ctx.send(embed=embed)
         return
 
-
     # Complete
     @commands.hybrid_command(description='Register the config. One-time run only. Administrator privileges required. Slash command only.')
     @commands.has_permissions(administrator=True)
@@ -143,7 +139,7 @@ class Commands(commands.Cog):
         # convert the Channel object to ID
         generalchannel_id = generalchannel.id
         # connect to the database
-        conn = sqlite3.connect("sirenDB.db")
+        conn = sqlite3.connect("SF-SirenBot/sirenDB.db")
         cursor = conn.cursor()
         # try to insert the provided settings into the database. Will not work if guild ID is already in the guild_config table
         try:
@@ -159,14 +155,14 @@ class Commands(commands.Cog):
         config = cursor.fetchall()
 
         """Pattles' work (just the return embed)"""
-        embed = discord.Embed(description='Database configured. Config:\n{}\n\n'.format(config) + f'Use `{self.bot.prefix}config` to review your config at any time.', color=self.bot.color)
+        embed = discord.Embed(description='Database configured. Config:\n```{}```\n'.format(config) + f'Use `{self.bot.prefix}config` to review your config at any time.', color=self.bot.color)
         await ctx.send(embed=embed)
         
         # await ctx.send("Database configured. Config:\n{}".format(config))
         # Replaced with embed. 
 
     # Complete
-    @commands.command(description="Syncs all commands globally. Administrator privileges required.")
+    @commands.command(description="Syncs all commands globally. Administrator privileges required. Text command only.")
     @commands.has_permissions(administrator=True)
     async def sync(self, ctx: commands.Context, guilds: commands.Greedy[discord.Object], spec: Optional[Literal["~", "*", "^"]] = None) -> None:
         if ctx.author.id not in self.bot.developer_ids:

@@ -1,5 +1,8 @@
+import json
 import discord
 import sqlite3
+import aiohttp
+
 from SirenBot import *
 from typing import Literal
 from dotenv import load_dotenv
