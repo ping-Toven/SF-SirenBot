@@ -112,6 +112,11 @@ class MyHelp(commands.HelpCommand):
         desc = 'ServerForge\'s OSS SirenBot. Monitor dangerous changes in your communities and be alerted as soon as they happen.\n\n' \
             + f'> {SirenBot.user.mention}\'s prefix is `{SirenBot.prefix}`\n'
         embed = discord.Embed(title=f'Help | {self.context.author}', description=desc, color=SirenBot.color)
+        embed.add_field(name='Links', value=
+                        '> [Documentation](https://sirenbot.gitbook.io/sirenbot-documentation/)\n' \
+                        + '> [Github](https://github.com/ping-Toven/SF-SirenBot/tree/main)\n' \
+                        + '> [Contact](https://tally.so/r/mRxa1p)'
+                        )
         embed.set_thumbnail(url=SirenBot.user.avatar)
 
         for cog, commands in mapping.items():
