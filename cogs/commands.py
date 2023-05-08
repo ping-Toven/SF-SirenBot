@@ -1,5 +1,6 @@
 import discord
 import sqlite3
+from sqlite3 import Error
 from discord import app_commands
 from discord.ext import commands
 from typing import *
@@ -75,7 +76,6 @@ class Commands(commands.Cog):
         """Getting objects."""
         guild = self.bot.get_guild(get_guild_id()) if get_guild_id != None else None
         general_chat = self.bot.get_channel(get_gen_chat()) if get_gen_chat != None else None
-        logging_channel = self.bot.get_channel(get_log_channel()) if get_log_channel != None else None
         mod_role = ctx.guild.get_role(get_mod_role()) if get_mod_role != None else None
         admin_role = ctx.guild.get_role(get_admin_role()) if get_admin_role != None else None
         team_role = ctx.guild.get_role(get_team_role()) if get_team_role != None else None
@@ -94,8 +94,6 @@ class Commands(commands.Cog):
                 value=f'{verified_role}\n`{verified_role.id}`\n{verified_role.mention}' if verified_role != None else '`None`')
         embed.add_field(name='General Channel:',
                 value=f'{general_chat}\n`{general_chat.id}`\n{general_chat.mention}' if general_chat != None else '`None`')
-        embed.add_field(name='Logging Channel:',
-                value=f'{logging_channel}\n`{logging_channel.id}`\n{logging_channel.mention}' if logging_channel != None else '`None`')
 
         embed.set_thumbnail(url=self.bot.user.avatar)
         embed.set_footer(text=f'Bot ID: {self.bot.user.id}')
@@ -127,10 +125,17 @@ class Commands(commands.Cog):
     @commands.hybrid_command(description='Register the config. One-time run only. Administrator privileges required. Slash command only.')
     @commands.has_permissions(administrator=True)
     async def register(self, ctx, modrole: discord.Role, adminrole: discord.Role, teamrole: discord.Role, verifiedrole: discord.Role, generalchannel: discord.TextChannel):
-        if ctx.interaction:
+        if not ctx.interaction:
             return
         
         """Toven's work"""
+        errored = False
+        # connect to the database
+        conn = sqlite3.connect("./sirenDB.db")
+        cursor = conn.cursor()
+        # SQL statement to create the config table upon running command ( also used if config is reset & table deleted )
+        sql_create_config_table = """CREATE TABLE IF NOT EXISTS "guild_config" ("guild_id" INTEGER, "mod_role" INTEGER, "admin_role" INTEGER, "team_role" INTEGER, "general_channel" INTEGER, "verified_role" INTEGER, PRIMARY KEY("guild_id"));"""
+        cursor.execute(sql_create_config_table)
         # Command takes the snowflake ID of various Discord base classes and stores them in the sqlitedb for later retrieval in event classes
         # start by getting the command's context guild id
         guild = ctx.guild.id
@@ -138,28 +143,24 @@ class Commands(commands.Cog):
         modrole_id, adminrole_id, teamrole_id, verifiedrole_id = modrole.id, adminrole.id, teamrole.id, verifiedrole.id
         # convert the Channel object to ID
         generalchannel_id = generalchannel.id
-        # connect to the database
-        conn = sqlite3.connect("SF-SirenBot/sirenDB.db")
-        cursor = conn.cursor()
-        # try to insert the provided settings into the database. Will not work if guild ID is already in the guild_config table
+        # try to insert the provided settings into the database. throws sqlite Error if guild_id exists in DB
         try:
             cursor.execute("INSERT INTO guild_config(guild_id, mod_role, admin_role, team_role, general_channel, verified_role) VALUES ({}, {}, {}, {}, {}, {})".format(guild, modrole_id, adminrole_id, teamrole_id, generalchannel_id, verifiedrole_id))
             conn.commit()
-        # catch the unique constraint error if trying to run command after setup
-        except CommandInvokeError:
+        # catch sqlite specific "Error" if unique guild_id constraint violated
+        except Error:
             cursor.execute("SELECT * FROM guild_config WHERE guild_id = {}".format(guild))
             config = cursor.fetchall()
+            errored = True
             await ctx.send("ERROR: Bot has already been set up. Config:\n{}".format(config))
         # show the user the config when it does run
         cursor.execute("SELECT * FROM guild_config WHERE guild_id = {}".format(guild))
         config = cursor.fetchall()
-
-        """Pattles' work (just the return embed)"""
-        embed = discord.Embed(description='Database configured. Config:\n```{}```\n'.format(config) + f'Use `{self.bot.prefix}config` to review your config at any time.', color=self.bot.color)
-        await ctx.send(embed=embed)
+        if not errored:
+            """Pattles' work (just the return embed)"""
+            embed = discord.Embed(description='Database configured. Config:\n```{}```\n'.format(config) + f'Use `{self.bot.prefix}config` to review your config at any time.', color=self.bot.color)
+            await ctx.send(embed=embed)
         
-        # await ctx.send("Database configured. Config:\n{}".format(config))
-        # Replaced with embed. 
 
     # Complete
     @commands.command(description="Syncs all commands globally. Administrator privileges required. Text command only.")

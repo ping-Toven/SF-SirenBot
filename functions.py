@@ -7,7 +7,7 @@ from SirenBot import *
 from typing import Literal
 from dotenv import load_dotenv
 
-load_dotenv('SF-SirenBot/config.env') 
+load_dotenv('./config.env') 
 
 """OTHER"""
 def get_guild_id():
@@ -98,21 +98,6 @@ def get_gen_chat():
         print(e)
     return general_channel
 
-def get_log_channel():
-    """
-    Gets the log_channel from sirenDB.db
-    rtype: int
-    """
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute(f"SELECT log_channel FROM guild_config;")
-    try:
-        log_channel = cursor.fetchone()[0]
-    except Exception as e:
-        log_channel = None
-        print(e)
-    return log_channel
-
 """config.env FUNCTIONS"""
 def get_general_logs():
     """
@@ -166,12 +151,12 @@ def update_webhook_tokens_json(name:Literal['mega_alerts', 'critical', 'general'
     """
 
     try: 
-        with open('SF-SirenBot/webhook_tokens.json', encoding='utf-8') as infile:
+        with open('./webhook_tokens.json', encoding='utf-8') as infile:
             obj = json.load(infile)
 
         obj[str(name)] = str(webhook_token_url)
         
-        with open('SF-SirenBot/webhook_tokens.json', 'w') as outfile:
+        with open('./webhook_tokens.json', 'w') as outfile:
             json.dump(obj, outfile, ensure_ascii=True, indent=4)
         return True
     except Exception as e:
@@ -184,7 +169,7 @@ async def send_webhook_embed(name:Literal['mega_alerts', 'critical', 'general'],
     rtype: bool
     """
     try: 
-        with open('SF-SirenBot/webhook_tokens.json', encoding='utf-8') as infile:
+        with open('./webhook_tokens.json', encoding='utf-8') as infile:
             f = json.load(infile)
 
         webhook_url = None

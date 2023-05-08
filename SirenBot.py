@@ -2,7 +2,7 @@
 SF SirenBot by Jon_HQ, Toven, KaoSxEclipse, Pattles, Alexander, & Bopped
 """
 
-DB_PATH = 'SF-SirenBot/sirenDB.db'
+DB_PATH = './sirenDB.db'
 
 """CONFIG"""
 PREFIX = 'sb!'
@@ -16,7 +16,7 @@ from discord.ext import commands
 from discord.ext.commands.errors import *
 from dotenv import load_dotenv
 
-load_dotenv('SF-SirenBot/token.env') 
+load_dotenv('./token.env') 
 
 INITIAL_EXTENSIONS = [
     'cogs.events',
