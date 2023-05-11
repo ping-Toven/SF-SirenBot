@@ -20,10 +20,6 @@ class Commands(commands.Cog):
         """
         ## Command is ran in the guild with the logs
 
-        Checks if ctx.author is 'bot_master' from config.env
-            If they aren't, return
-            If they are, continue
-
         Checks if there are webhooks titled 'mega', 'critical', 'general' anywhere in the server
             If there is, it deletes them
 
@@ -34,7 +30,7 @@ class Commands(commands.Cog):
         Sends a response
         """
         
-        """Checks if there are webhooks titled 'mega', 'critical', 'general' anywhere in the server"""
+        """Checks if there are webhooks titled 'mega', 'critical', 'general' anywhere in the logging server, & deletes them if possible"""
         for webhook in await ctx.guild.webhooks():
             if webhook.name in ['SB Mega Alert Logs', 'SB Critical Logs', 'SB General Logs']:
                 await webhook.delete()
@@ -75,6 +71,7 @@ class Commands(commands.Cog):
     async def config(self, ctx):
         """Getting objects."""
         guild = self.bot.get_guild(get_guild_id()) if get_guild_id != None else None
+        command_center = self.bot.get_guild(get_cc_id()) if get_cc_id != None else None
         general_chat = self.bot.get_channel(get_gen_chat()) if get_gen_chat != None else None
         mod_role = ctx.guild.get_role(get_mod_role()) if get_mod_role != None else None
         admin_role = ctx.guild.get_role(get_admin_role()) if get_admin_role != None else None
@@ -84,6 +81,7 @@ class Commands(commands.Cog):
         """Sending embed."""
         embed = discord.Embed(title=f'{guild.name} Config', color=self.bot.color)
         embed.add_field(name='Guild:', value=f'{guild.name}\n`{guild.id}`' if guild != None else '`None`')
+        embed.add_field(name='Command Center:', value=f'{command_center.name}\n`{command_center.id}`' if command_center != None else '`None`')
         embed.add_field(name='Admin Role:',
                 value=f'{admin_role}\n`{admin_role.id}`\n{admin_role.mention}' if admin_role != None else '`None`')
         embed.add_field(name='Mod Role:',
@@ -124,7 +122,7 @@ class Commands(commands.Cog):
     # Complete
     @commands.hybrid_command(description='Register the config. One-time run only. Administrator privileges required. Slash command only.')
     @commands.has_permissions(administrator=True)
-    async def register(self, ctx, modrole: discord.Role, adminrole: discord.Role, teamrole: discord.Role, verifiedrole: discord.Role, generalchannel: discord.TextChannel):
+    async def register(self, ctx, modrole: discord.Role, adminrole: discord.Role, teamrole: discord.Role, verifiedrole: discord.Role, generalchannel: discord.TextChannel, commandcenter: discord.Guild):
         if not ctx.interaction:
             return
         
@@ -134,18 +132,16 @@ class Commands(commands.Cog):
         conn = sqlite3.connect("./sirenDB.db")
         cursor = conn.cursor()
         # SQL statement to create the config table upon running command ( also used if config is reset & table deleted )
-        sql_create_config_table = """CREATE TABLE IF NOT EXISTS "guild_config" ("guild_id" INTEGER, "mod_role" INTEGER, "admin_role" INTEGER, "team_role" INTEGER, "general_channel" INTEGER, "verified_role" INTEGER, PRIMARY KEY("guild_id"));"""
+        sql_create_config_table = """CREATE TABLE IF NOT EXISTS "guild_config" ("guild_id" INTEGER, "mod_role" INTEGER, "admin_role" INTEGER, "team_role" INTEGER, "general_channel" INTEGER, "verified_role" INTEGER, "command_center" INTEGER, PRIMARY KEY("guild_id"));"""
         cursor.execute(sql_create_config_table)
         # Command takes the snowflake ID of various Discord base classes and stores them in the sqlitedb for later retrieval in event classes
         # start by getting the command's context guild id
         guild = ctx.guild.id
-        # convert the Role objects to their IDs
-        modrole_id, adminrole_id, teamrole_id, verifiedrole_id = modrole.id, adminrole.id, teamrole.id, verifiedrole.id
-        # convert the Channel object to ID
-        generalchannel_id = generalchannel.id
+        # convert the Discord objects to their IDs
+        modrole_id, adminrole_id, teamrole_id, verifiedrole_id, generalchannel_id, commcenter_id = modrole.id, adminrole.id, teamrole.id, verifiedrole.id, generalchannel.id, commandcenter.id
         # try to insert the provided settings into the database. throws sqlite Error if guild_id exists in DB
         try:
-            cursor.execute("INSERT INTO guild_config(guild_id, mod_role, admin_role, team_role, general_channel, verified_role) VALUES ({}, {}, {}, {}, {}, {})".format(guild, modrole_id, adminrole_id, teamrole_id, generalchannel_id, verifiedrole_id))
+            cursor.execute("INSERT INTO guild_config(guild_id, mod_role, admin_role, team_role, general_channel, verified_role, command_center) VALUES ({}, {}, {}, {}, {}, {}, {})".format(guild, modrole_id, adminrole_id, teamrole_id, generalchannel_id, verifiedrole_id, commcenter_id))
             conn.commit()
         # catch sqlite specific "Error" if unique guild_id constraint violated
         except Error:

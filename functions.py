@@ -21,6 +21,17 @@ def get_guild_id():
     guild_id = cursor.fetchone()[0]
     return guild_id
 
+def get_cc_id():
+    """
+    Gets command center id from sirenDB.db
+    rtype: int
+    """
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT command_center FROM guild_config;")
+    command_center = cursor.fetchone()[0]
+    return command_center
+
 """ROLES"""
 def get_admin_role():
     """
@@ -182,6 +193,8 @@ async def send_webhook_embed(name:Literal['mega_alerts', 'critical', 'general'],
 
         async with aiohttp.ClientSession() as session:
             webhook = discord.Webhook.from_url(url=webhook_url, session=session)
+            if name == 'mega_alerts':
+                await webhook.send(content="@everyone URGENT:")
             await webhook.send(embed=embed_obj)
             await session.close()
 

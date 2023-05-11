@@ -29,7 +29,8 @@ class SirenBot(commands.Bot):
         super().__init__(
             help_command=MyHelp(command_attrs={'aliases':['h'], 'description':'Displays a list of all available commands. Text command only.'}), 
             command_prefix=commands.when_mentioned_or(PREFIX), 
-            intents=discord.Intents.all(), 
+            intents=discord.Intents.all(),
+            allowed_mentions=discord.AllowedMentions.all(),
             case_insensitive=True, 
             )
         

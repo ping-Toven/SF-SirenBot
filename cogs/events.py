@@ -94,7 +94,7 @@ class Events(commands.Cog):
             await send_webhook_embed('mega_alerts', embed)
 
     # Complete
-    @commands.Cog.listener(name='on_guild_leave')
+    @commands.Cog.listener(name='on_guild_remove')
     async def sirenbot_leaves_guild(self, guild):
         """
         If the bot leaves the guild, 
@@ -106,6 +106,21 @@ class Events(commands.Cog):
 
         embed = discord.Embed(title=f'{self.bot.user} Left {guild.name}', description=f'{self.bot.user.mention} has just left {guild.name}.', color=self.bot.color, timestamp=discord.utils.utcnow())
         await send_webhook_embed('mega_alerts', embed)
+
+    # Complete
+    @commands.Cog.listener(name='on_raw_member_remove')
+    async def sirenbot_leaves_guild(self, payload):
+        """
+        If ANY bot leaves the guild, 
+        Mega alert gets sent.
+        """
+        if payload.guild_id != get_guild_id():
+            return
+        
+        if payload.user.bot:
+            guild = self.bot.get_guild(payload.guild_id)
+            embed = discord.Embed(title=f'{payload.user} removed from {guild.name}', description=f'{payload.user.mention} has been removed from {guild.name}.', color=self.bot.color, timestamp=discord.utils.utcnow())
+            await send_webhook_embed('mega_alerts', embed)
 
     # Complete
     @commands.Cog.listener(name='on_guild_channel_update')
