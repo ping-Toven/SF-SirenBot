@@ -44,6 +44,7 @@ class SirenBot(commands.Bot):
         """Saved Texts, used for simplifying return messages."""
         self.syntax = 'Syntax:'
         self.hyrtcc = 'Uh oh! Have you ran the commmand correctly?'
+        self.no_config = "Uh oh! Cannot display your configuration before the /register command has been run!"
         self.swr = 'Uh oh! Something went wrong.'
         self.usage = 'Usage:'
         self.aliases = 'Aliases:'
@@ -52,6 +53,8 @@ class SirenBot(commands.Bot):
         self.foobar = '`foo/bar – choose either \'foo\' or \'bar\'`\n'
         self.ratelimited = 'Please wait a few minutes and try again.'
         self.no_logs = 'One or more of your desired log channels don\'t have a channel. Please set them up in config.env and restart the bot.'
+        self.not_in_cc = "Uh oh! Make sure to invite me to your Command Center before running /register."
+
 
     async def setup_hook(self):
         for extension in INITIAL_EXTENSIONS:
@@ -63,7 +66,12 @@ class SirenBot(commands.Bot):
     async def on_command_error(self, ctx, error):
         if isinstance(error, CommandOnCooldown):
             pass
-
+        
+        if isinstance(error, GuildNotFound):
+            embed = discord.Embed(title=self.not_in_cc, description=f'Follow the steps on the documenation to ensure proper setup: https://sirenbot.gitbook.io/sirenbot-documentation/setup', color=self.color)
+            await ctx.send(embed=embed)
+            return
+        
         if isinstance(error, (MissingRequiredArgument, BadArgument)):
             embed = discord.Embed(title=self.hyrtcc, description=f'Invalid command usage. \n\nFor more information about this command, type `{self.prefix}help {ctx.command.name}`.', color=self.color)
             

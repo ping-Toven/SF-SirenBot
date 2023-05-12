@@ -1,6 +1,6 @@
 import discord
 import sqlite3
-from sqlite3 import Error
+from sqlite3 import Error, OperationalError
 from discord import app_commands
 from discord.ext import commands
 from typing import *
@@ -70,13 +70,19 @@ class Commands(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def config(self, ctx):
         """Getting objects."""
-        guild = self.bot.get_guild(get_guild_id()) if get_guild_id != None else None
+        try:
+            guild = self.bot.get_guild(get_guild_id()) if get_guild_id != None else None
+        except OperationalError:
+            embed = discord.Embed(title=self.bot.no_config, description="Make sure to run /register in your target guild.", color=self.bot.color)
+            await ctx.send(embed=embed)
+            return
+        
         command_center = self.bot.get_guild(get_cc_id()) if get_cc_id != None else None
         general_chat = self.bot.get_channel(get_gen_chat()) if get_gen_chat != None else None
-        mod_role = ctx.guild.get_role(get_mod_role()) if get_mod_role != None else None
-        admin_role = ctx.guild.get_role(get_admin_role()) if get_admin_role != None else None
-        team_role = ctx.guild.get_role(get_team_role()) if get_team_role != None else None
-        verified_role = ctx.guild.get_role(get_verified_role()) if get_verified_role != None else None
+        mod_role = guild.get_role(get_mod_role()) if get_mod_role != None else None
+        admin_role = guild.get_role(get_admin_role()) if get_admin_role != None else None
+        team_role = guild.get_role(get_team_role()) if get_team_role != None else None
+        verified_role = guild.get_role(get_verified_role()) if get_verified_role != None else None
 
         """Sending embed."""
         embed = discord.Embed(title=f'{guild.name} Config', color=self.bot.color)

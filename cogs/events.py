@@ -252,11 +252,11 @@ class Events(commands.Cog):
             if different_role not in watched_roles:
                 return
 
-            embed = discord.Embed(title='Watched role given', description=f'{different_role.mention} has been given to {after.mention}.', color=self.bot.color, timestamp=discord.utils.utcnow())
+            embed = discord.Embed(title='Watched role given', description=f'{different_role.name} has been given to {after.mention}.', color=self.bot.color, timestamp=discord.utils.utcnow())
             embed.set_author(name=after, icon_url=after.avatar)
             embed.set_footer(text=f'User ID: {after.id}')
 
-            await send_webhook_embed('critical', embed)
+            await send_webhook_embed('mega', embed)
         
     # Complete
     @commands.Cog.listener(name='on_member_remove')
@@ -323,7 +323,7 @@ class Events(commands.Cog):
         different_role = list(different_role)[0]
 
         embed = discord.Embed(title='Watched member lost a role', color=self.bot.color, timestamp=discord.utils.utcnow())
-        embed.add_field(name='Role lost:', value=different_role.mention)
+        embed.add_field(name='Role lost:', value=different_role.name)
         embed.set_author(name=before, icon_url=before.avatar)
         embed.set_footer(text=f'User ID: {before.id}')
 
